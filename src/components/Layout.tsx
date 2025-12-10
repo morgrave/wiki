@@ -19,7 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ projects, documents }) => {
 
   return (
     <div className={styles.container}>
-      <Header documents={documents} onMenuToggle={toggleSidebar} />
+      <Header documents={documents} projects={projects} onMenuToggle={toggleSidebar} />
       <div className={styles.body}>
         <Sidebar 
           projects={projects} 

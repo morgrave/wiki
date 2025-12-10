@@ -2,15 +2,16 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, X, Box, Menu } from 'lucide-react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import type { Document } from '../types';
+import type { Document, Project } from '../types';
 import styles from './Header.module.css';
 
 interface HeaderProps {
   documents: Document[];
+  projects: Project[];
   onMenuToggle?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ documents, onMenuToggle }) => {
+const Header: React.FC<HeaderProps> = ({ documents, projects, onMenuToggle }) => {
   const { projectId, version } = useParams<{ projectId: string; version?: string }>();
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
@@ -23,6 +24,13 @@ const Header: React.FC<HeaderProps> = ({ documents, onMenuToggle }) => {
     if (!projectId) return [];
     return documents.filter(d => d.project === projectId && d.version === currentVersion);
   }, [documents, projectId, currentVersion]);
+
+  const currentProject = useMemo(() => {
+    if (!projectId) return null;
+    return projects.find(p => p.id === projectId);
+  }, [projects, projectId]);
+
+  const projectDisplayName = currentProject?.name || projectId;
 
   const results = useMemo(() => {
     if (!query || !projectId) return [];
@@ -90,7 +98,7 @@ const Header: React.FC<HeaderProps> = ({ documents, onMenuToggle }) => {
             <input
               type="text"
               className={styles.searchInput}
-              placeholder={`Search in ${projectId}...`}
+              placeholder={`Search in ${projectDisplayName}...`}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);

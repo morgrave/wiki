@@ -43,10 +43,10 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
     const project = parts[expIndex + 1];
     
     // Initialize project if not exists
-    if (!projectsMap.has(project)) {
+    if (!projectsMap.has(project) && projectNames[project]) {
       projectsMap.set(project, {
         id: project,
-        name: projectNames[project] || project,
+        name: projectNames[project],
       });
     }
 

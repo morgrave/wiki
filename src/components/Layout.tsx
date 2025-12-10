@@ -12,12 +12,22 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ projects, documents }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const closeSidebar = () => setIsSidebarOpen(false);
+
   return (
     <div className={styles.container}>
-      <Header documents={documents} />
+      <Header documents={documents} onMenuToggle={toggleSidebar} />
       <div className={styles.body}>
-        <Sidebar projects={projects} documents={documents} />
-        <main className={styles.content}>
+        <Sidebar 
+          projects={projects} 
+          documents={documents} 
+          isOpen={isSidebarOpen}
+          onClose={closeSidebar}
+        />
+        <main className={styles.content} onClick={closeSidebar}>
            <Outlet />
         </main>
       </div>

@@ -1,15 +1,16 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Search, X, Box } from 'lucide-react';
+import { Search, X, Box, Menu } from 'lucide-react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import type { Document } from '../types';
 import styles from './Header.module.css';
 
 interface HeaderProps {
   documents: Document[];
+  onMenuToggle?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ documents }) => {
+const Header: React.FC<HeaderProps> = ({ documents, onMenuToggle }) => {
   const { projectId, version } = useParams<{ projectId: string; version?: string }>();
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
@@ -66,6 +67,15 @@ const Header: React.FC<HeaderProps> = ({ documents }) => {
   return (
     <header className={styles.header}>
       <div className={styles.leftSection}>
+        {onMenuToggle && (
+          <button 
+            onClick={onMenuToggle}
+            className={styles.menuButton}
+            aria-label="Toggle sidebar"
+          >
+            <Menu size={24} />
+          </button>
+        )}
         <Link to="/" className={styles.logo}>
           <Box className="text-blue-500" />
           Wiki

@@ -28,6 +28,40 @@
     text-decoration: none;
 }
 
+.menuButton {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    transition: opacity 0.2s;
+}
+
+.menuButton:hover {
+    opacity: 0.7;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .menuButton {
+        display: block;
+    }
+    
+    .searchContainer {
+        width: 300px;
+    }
+    
+    .header {
+        padding: 0 var(--spacing-md);
+    }
+    
+    .leftSection {
+        gap: var(--spacing-sm);
+    }
+}
+
 .searchContainer {
     position: relative;
     width: 400px;

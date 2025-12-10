@@ -10,6 +10,8 @@ import { naturalCompare } from '../utils/naturalSort';
 interface SidebarProps {
   projects: Project[];
   documents: Document[];
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 interface TreeNode {
@@ -92,7 +94,7 @@ const SidebarNode: React.FC<{ node: TreeNode; depth: number; currentPath: string
   return <SidebarFolder node={node} depth={depth} currentPath={currentPath} />;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ projects, documents }) => {
+const Sidebar: React.FC<SidebarProps> = ({ projects, documents, isOpen = true, onClose }) => {
   const { projectId, version = 'latest' } = useParams<{ projectId: string; version?: string }>();
   const navigate = useNavigate();
   const params = useParams();
@@ -137,7 +139,13 @@ const Sidebar: React.FC<SidebarProps> = ({ projects, documents }) => {
   }, [projectDocs]);
 
   return (
-    <aside className={styles.sidebar}>
+    <>
+      {/* Overlay for mobile */}
+      {isOpen && (
+        <div className={styles.overlay} onClick={onClose} />
+      )}
+      
+      <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}>
       
       <div className={styles.section}>
         <label className={styles.sectionTitle}>PROJECTS</label>
@@ -187,6 +195,7 @@ const Sidebar: React.FC<SidebarProps> = ({ projects, documents }) => {
         </>
       )}
     </aside>
+    </>
   );
 };
 

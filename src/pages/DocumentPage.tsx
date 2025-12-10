@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import { GitCompare } from 'lucide-react';
+import { GitCompare, Loader2 } from 'lucide-react';
 import type { Document } from '../types';
 import styles from './DocumentPage.module.css';
 
@@ -118,7 +118,19 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
         </div>
       )}
 
-      {loading && <div className="text-slate-400">Loading content...</div>}
+      {loading && (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '400px',
+          flexDirection: 'column',
+          gap: '1rem'
+        }}>
+          <Loader2 size={48} className="animate-spin" style={{ color: 'var(--accent-color)' }} />
+          <p style={{ color: 'var(--text-secondary)' }}>Loading content...</p>
+        </div>
+      )}
       {error && <div className="text-red-400">Error: {error}</div>}
 
       {!loading && !error && (

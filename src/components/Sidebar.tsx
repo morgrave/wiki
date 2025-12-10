@@ -172,7 +172,7 @@ const Sidebar: React.FC<SidebarProps> = ({ projects, documents, isOpen = true, o
             <label className={styles.sectionTitle}>PROMPT</label>
             <div>
                <NavLink
-                 to={`/${projectId}/kb`}
+                 to={`/${projectId}/KB`}
                  className={({ isActive }) => clsx(
                    styles.fileLink,
                    isActive && styles.fileActive

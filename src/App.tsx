@@ -29,7 +29,7 @@ function App() {
         <Route path="/:projectId" element={<Layout projects={data.projects} documents={data.documents} />}>
            <Route index element={<ProjectDashboard projects={data.projects} documents={data.documents} />} />
            
-           <Route path="kb" element={<KBPage projects={data.projects} />} />
+           <Route path="KB" element={<KBPage projects={data.projects} />} />
            <Route path="diff/*" element={<DiffPage documents={data.documents} />} />
            {/* Catch-all for docPath, then version at the end. 
                We need a splat for docPath because it can contain slashes. 

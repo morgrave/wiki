@@ -98,7 +98,7 @@ const Header: React.FC<HeaderProps> = ({ documents, projects, onMenuToggle }) =>
             <input
               type="text"
               className={styles.searchInput}
-              placeholder={`Search in ${projectDisplayName}...`}
+              placeholder={`${projectDisplayName} 내부에서 검색`}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);

@@ -128,7 +128,6 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
           gap: '1rem'
         }}>
           <Loader2 size={48} className="animate-spin" style={{ color: 'var(--accent-color)' }} />
-          <p style={{ color: 'var(--text-secondary)' }}>Loading content...</p>
         </div>
       )}
       {error && <div className="text-red-400">Error: {error}</div>}

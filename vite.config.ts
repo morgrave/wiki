@@ -53,6 +53,10 @@ export default defineConfig({
         {
           src: 'config.json',
           dest: '.'
+        },
+        {
+          src: '404.html',
+          dest: '.'
         }
       ]
     })

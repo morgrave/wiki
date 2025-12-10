@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.body {
+    display: flex;
+    flex: 1;
+    /* Ensure this container takes remaining height */
+    position: relative;
+}
+
+.content {
+    flex: 1;
+    min-width: 0;
+    /* Prevent overflow issues */
+    /* Content scrolls naturally with the page */
+}

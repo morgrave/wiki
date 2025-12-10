@@ -1,0 +1,89 @@
+.sidebar {
+    width: 280px;
+    background-color: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 64px);
+    position: sticky;
+    top: 64px;
+    overflow-y: auto;
+}
+
+.section {
+    padding: var(--spacing-lg);
+}
+
+.sectionTitle {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.projectItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    margin-bottom: 2px;
+}
+
+.projectItem:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.itemActive {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.itemActive:hover {
+    background-color: var(--accent-hover);
+}
+
+.treeItem {
+    margin-bottom: 2px;
+}
+
+.folderLabel {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.fileLink {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.fileLink:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.fileActive {
+    background-color: rgba(56, 189, 248, 0.15);
+    /* Accent with opacity */
+    color: var(--accent-color);
+}

@@ -1,0 +1,113 @@
+.pageContainer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+.metadata {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    font-size: 0.9rem;
+}
+
+.metaRow {
+    display: flex;
+    margin-bottom: 4px;
+}
+
+.metaKey {
+    width: 120px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.metaValue {
+    color: var(--text-primary);
+}
+
+.markdown {
+    line-height: 1.7;
+    color: var(--text-primary);
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.markdown ul,
+.markdown ol {
+    padding-left: 1.5em;
+    margin-bottom: 1em;
+}
+
+.markdown p {
+    margin-bottom: 1.25em;
+}
+
+.markdown a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.markdown a:hover {
+    text-decoration: underline;
+}
+
+.markdown blockquote {
+    border-left: 4px solid var(--accent-color);
+    padding-left: var(--spacing-md);
+    margin-left: 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.historyBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.versionBadge {
+    background: var(--accent-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.compareButton {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.compareButton:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-color);
+}

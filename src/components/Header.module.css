@@ -1,0 +1,103 @@
+.header {
+    height: 64px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-xl);
+    background-color: var(--bg-primary);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+}
+
+.leftSection {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.searchContainer {
+    position: relative;
+    width: 400px;
+}
+
+.searchInputWrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0 var(--spacing-md);
+    transition: all 0.2s;
+}
+
+.searchInputWrapper:focus-within {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.searchInput {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: var(--spacing-sm);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    margin-top: var(--spacing-sm);
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    z-index: 20;
+}
+
+.dropdownItem {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dropdownItem:last-child {
+    border-bottom: none;
+}
+
+.dropdownItem:hover,
+.activeItem {
+    background-color: var(--bg-tertiary);
+}
+
+.itemTitle {
+    font-weight: 500;
+    color: var(--accent-color);
+    display: block;
+}
+
+.itemPath {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: 2px;
+}

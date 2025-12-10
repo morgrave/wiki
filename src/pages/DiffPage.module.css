@@ -1,0 +1,30 @@
+.diffContainer {
+    padding: var(--spacing-xl);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.diffHeader {
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.diffTitle {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+}
+
+.backLink {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.backLink:hover {
+    text-decoration: underline;
+    color: var(--accent-color);
+}

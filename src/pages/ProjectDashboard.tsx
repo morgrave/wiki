@@ -3,6 +3,7 @@ import React, { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FileText, FolderOpen } from 'lucide-react';
 import type { Project, Document } from '../types';
+import { naturalCompare } from '../utils/naturalSort';
 import styles from './ProjectDashboard.module.css';
 
 interface ProjectDashboardProps {
@@ -39,6 +40,12 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
       }
     });
 
+    // Sort documents within each category naturally
+    Object.keys(grouped).forEach(category => {
+      grouped[category].sort((a, b) => naturalCompare(a.filePath, b.filePath));
+    });
+    rootDocs.sort((a, b) => naturalCompare(a.filePath, b.filePath));
+
     return { grouped, rootDocs };
   }, [projectDocs]);
 
@@ -46,7 +53,7 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
     return <div className={styles.dashboard}>Project not found</div>;
   }
 
-  const sortedCategories = Object.keys(groups.grouped).sort();
+  const sortedCategories = Object.keys(groups.grouped).sort(naturalCompare);
 
   return (
     <div className={styles.dashboard}>
@@ -71,7 +78,7 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
             {groups.rootDocs.map(doc => (
               <Link 
                 key={doc.id} 
-                to={`/p/${projectId}/v/${currentVersion}/d/${doc.filePath}`}
+                to={`/${projectId}/${doc.filePath}/${currentVersion}`}
                 className={styles.docItem}
               >
                 <FileText size={16} className={styles.docIcon} />
@@ -96,7 +103,7 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
             {groups.grouped[category].map(doc => (
               <Link 
                 key={doc.id} 
-                to={`/p/${projectId}/v/${currentVersion}/d/${doc.filePath}`}
+                to={`/${projectId}/${doc.filePath}/${currentVersion}`}
                 className={styles.docItem}
               >
                 <FileText size={16} className={styles.docIcon} />

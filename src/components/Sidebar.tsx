@@ -5,6 +5,7 @@ import { Folder, FileText, ChevronRight, ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
 import type { Project, Document } from '../types';
 import styles from './Sidebar.module.css';
+import { naturalCompare } from '../utils/naturalSort';
 
 interface SidebarProps {
   projects: Project[];
@@ -75,7 +76,7 @@ const SidebarNode: React.FC<{ node: TreeNode; depth: number; currentPath: string
   if (isFile) {
     return (
       <NavLink
-        to={`/p/${projectId}/v/${currentVersion}/d/${node.doc!.filePath}`}
+        to={`/${projectId}/${node.doc!.filePath}/${currentVersion}`}
         className={({ isActive }) => clsx(
             styles.fileLink,
             isActive && styles.fileActive
@@ -109,7 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({ projects, documents }) => {
     const root: Record<string, TreeNode> = {};
     
     // Sort docs by path/name for consistency
-    const sortedDocs = [...projectDocs].sort((a, b) => a.filePath.localeCompare(b.filePath));
+    const sortedDocs = [...projectDocs].sort((a, b) => naturalCompare(a.filePath, b.filePath));
 
     sortedDocs.forEach(doc => {
       const parts = doc.filePath.split('/'); 
@@ -144,7 +145,7 @@ const Sidebar: React.FC<SidebarProps> = ({ projects, documents }) => {
           {projects.map(p => (
             <div 
               key={p.id}
-              onClick={() => navigate(`/p/${p.id}`)}
+              onClick={() => navigate(`/${p.id}`)}
               className={clsx(
                 styles.projectItem,
                 projectId === p.id && styles.itemActive
@@ -163,7 +164,7 @@ const Sidebar: React.FC<SidebarProps> = ({ projects, documents }) => {
             <label className={styles.sectionTitle}>PROMPT</label>
             <div>
                <NavLink
-                 to={`/p/${projectId}/kb`}
+                 to={`/${projectId}/kb`}
                  className={({ isActive }) => clsx(
                    styles.fileLink,
                    isActive && styles.fileActive

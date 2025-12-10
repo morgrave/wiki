@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ documents }) => {
   const handleSelect = (doc: Document) => {
     setQuery('');
     setIsOpen(false);
-    navigate(`/p/${projectId}/v/${doc.version}/d/${doc.filePath}`);
+    navigate(`/${projectId}/${doc.filePath}/${doc.version}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

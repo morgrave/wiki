@@ -14,9 +14,19 @@ interface DocumentPageProps {
 
 const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
   const params = useParams();
-  const { projectId, version } = params as { projectId: string; version: string };
   const navigate = useNavigate();
-  const actualDocPath = params["*"];
+
+  /* 
+     With path="*" inside /:projectId route, 'params["*"]' captures the whole subpath.
+     Example subpath: "characters/Palas/latest" 
+  */
+  const fullPath = params["*"] || "";
+  
+  // We assume the version is the LAST segment efficiently.
+  const parts = fullPath.split('/');
+  const version = parts.length > 0 ? parts[parts.length - 1] : 'latest';
+  const actualDocPath = parts.length > 1 ? parts.slice(0, -1).join('/') : '';
+  const { projectId } = params as { projectId: string };
 
   const currentDoc = documents.find(d => 
     d.project === projectId && 
@@ -68,7 +78,7 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
   }
 
   const handleDiff = (otherVer: string) => {
-    navigate(`/p/${projectId}/diff/${actualDocPath}?v1=${version}&v2=${otherVer}`);
+    navigate(`/${projectId}/diff/${actualDocPath}?v1=${version}&v2=${otherVer}`);
   };
 
   return (

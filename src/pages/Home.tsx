@@ -20,7 +20,7 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
         {projects.map(p => (
           <Link 
             key={p.id} 
-            to={`/p/${p.id}`}
+            to={`/${p.id}`}
             style={{ 
               display: 'flex', 
               alignItems: 'center', 

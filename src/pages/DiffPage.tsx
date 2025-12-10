@@ -89,7 +89,7 @@ const DiffPage: React.FC<DiffPageProps> = ({ documents }) => {
     <div className={styles.diffContainer}>
       <header className={styles.diffHeader}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <Link to={`/p/${projectId}/v/${v1}/d/${docPath}`} className={styles.backLink}>
+          <Link to={`/${projectId}/${docPath}/${v1}`} className={styles.backLink}>
             <ArrowLeft size={16} />
             Back to document
           </Link>

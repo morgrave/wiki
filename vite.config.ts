@@ -40,6 +40,7 @@ const serveStaticFiles = (): Plugin => ({
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/wiki/', 
   plugins: [
     react(),
     serveStaticFiles(),

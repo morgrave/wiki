@@ -3,9 +3,9 @@ const { spawn } = require("child_process");
 
 const choices = [
   { name: "배포하기 (npm run deploy)", value: "npm run deploy" },
-  { name: "로그 일괄 다운로드 (node download.js)", value: "node download.js" },
-  { name: "지식 베이스 파일 생성 (node KB.js)", value: "node KB.js" },
-  { name: "지식 베이스 업데이트 (node update.js)", value: "node update.js" },
+  { name: "로그 일괄 다운로드 (node download.cjs)", value: "node download.cjs" },
+  { name: "지식 베이스 파일 생성 (node KB.cjs)", value: "node KB.cjs" },
+  { name: "지식 베이스 업데이트 (node update.cjs)", value: "node update.cjs" },
 ];
 
 inquirer

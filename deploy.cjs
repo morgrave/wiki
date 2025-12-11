@@ -26,7 +26,17 @@ rl.question("커밋 메시지를 입력하세요 (기본값: deploy): ", (messag
 
     // Git commit
     console.log("💾 커밋 중...");
-    execSync(`git commit -m "${commitMessage}"`, { stdio: "inherit" });
+    try {
+      execSync(`git commit -m "${commitMessage}"`, { stdio: "inherit" });
+    } catch (commitError) {
+      // 커밋할 내용이 없는 경우
+      if (commitError.message.includes("nothing to commit")) {
+        console.log("\n✨ 커밋할 변경 사항이 없습니다. 모든 파일이 최신 상태입니다.");
+        rl.close();
+        return;
+      }
+      throw commitError;
+    }
 
     // Git push
     console.log("🚀 푸시 중...");

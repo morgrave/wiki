@@ -85,6 +85,11 @@ const DiffPage: React.FC<DiffPageProps> = ({ documents }) => {
     }
   };
 
+  // Check if documents are inherited from a different project
+  const sourceProject1 = doc1?.sourceProject;
+  const sourceProject2 = doc2?.sourceProject;
+  const hasInheritedSource = sourceProject1 || sourceProject2;
+
   return (
     <div className={styles.diffContainer}>
       <header className={styles.diffHeader}>
@@ -102,6 +107,22 @@ const DiffPage: React.FC<DiffPageProps> = ({ documents }) => {
         </div>
       </header>
 
+      {hasInheritedSource && (
+        <div style={{ 
+          padding: '0.75rem 1rem', 
+          marginBottom: '1rem', 
+          backgroundColor: '#1e293b', 
+          borderRadius: '8px',
+          border: '1px solid #334155',
+          color: '#94a3b8',
+          fontSize: '0.875rem'
+        }}>
+          📦 이 문서는 다른 프로젝트에서 상속되었습니다:
+          {sourceProject1 && <span style={{ marginLeft: '0.5rem', color: '#60a5fa' }}>[{v1}: {sourceProject1}]</span>}
+          {sourceProject2 && <span style={{ marginLeft: '0.5rem', color: '#60a5fa' }}>[{v2}: {sourceProject2}]</span>}
+        </div>
+      )}
+
       <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid #334155' }}>
         {loading ? (
            <div style={{ padding: '2rem', color: '#94a3b8', textAlign: 'center' }}>Loading diff...</div>
@@ -112,8 +133,8 @@ const DiffPage: React.FC<DiffPageProps> = ({ documents }) => {
             splitView={true}
             useDarkTheme={false}
             styles={newStyles}
-            leftTitle={`Version ${v1}`}
-            rightTitle={`Version ${v2}`}
+            leftTitle={`Version ${v1}${sourceProject1 ? ` (from ${sourceProject1})` : ''}`}
+            rightTitle={`Version ${v2}${sourceProject2 ? ` (from ${sourceProject2})` : ''}`}
           />
         )}
       </div>

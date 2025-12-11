@@ -13,6 +13,7 @@ export interface Document {
   frontmatter: Frontmatter;
   url: string; // Path to fetch content
   fullPath?: string; // Optional dev path
+  sourceProject?: string; // Original project if inherited via dependency
 }
 
 export interface Project {

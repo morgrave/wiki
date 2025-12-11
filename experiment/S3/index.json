@@ -1,3 +1,4 @@
 {
-  "name": "엑스페리온"
+  "name": "엑스페리온",
+  "dependency": ["xperion"]
 }

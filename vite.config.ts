@@ -4,7 +4,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy'
 import path from 'path'
 import fs from 'fs'
 
-// Custom plugin to serve experiment files and config.json in Dev
+// Custom plugin to serve experiment files in Dev
 const serveStaticFiles = (): Plugin => ({
   name: 'serve-static-files',
   configureServer(server) {
@@ -16,17 +16,6 @@ const serveStaticFiles = (): Plugin => ({
         const filePath = path.join(process.cwd(), 'experiment', req.url.replace('/experiment', ''));
         if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
           res.setHeader('Content-Type', 'text/markdown');
-          const stream = fs.createReadStream(filePath);
-          stream.pipe(res);
-          return;
-        }
-      }
-
-      // Serve /config.json
-      if (req.url === '/config.json') {
-        const filePath = path.join(process.cwd(), 'config.json');
-        if (fs.existsSync(filePath)) {
-          res.setHeader('Content-Type', 'application/json');
           const stream = fs.createReadStream(filePath);
           stream.pipe(res);
           return;
@@ -49,10 +38,6 @@ export default defineConfig({
         {
           src: 'experiment',
           dest: '.' 
-        },
-        {
-          src: 'config.json',
-          dest: '.'
         },
         {
           src: '404.html',

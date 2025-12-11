@@ -11,19 +11,26 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
   const documents: Document[] = [];
   // store project info including kbUrl
   const projectsMap = new Map<string, { id: string; name: string; kbUrl?: string }>();
+  
+  // Track which projects have been validated (have index.json)
+  const validatedProjects = new Set<string>();
+  // Track which projects have been checked but don't have index.json
+  const invalidProjects = new Set<string>();
 
   const baseUrl = import.meta.env.BASE_URL;
 
-  // Fetch project mapping from config.json
-  let projectNames: Record<string, string> = {};
-  try {
-    const configRes = await fetch(`${baseUrl}config.json`);
-    if (configRes.ok) {
-      const config = await configRes.json();
-      projectNames = config.projectNames || {};
+  // Helper function to fetch project name from index.json
+  async function fetchProjectName(projectId: string): Promise<string | null> {
+    try {
+      const indexRes = await fetch(`${baseUrl}experiment/${encodeURIComponent(projectId)}/index.json`);
+      if (indexRes.ok) {
+        const indexData = await indexRes.json();
+        return indexData.name || null;
+      }
+    } catch (e) {
+      console.error(`Failed to load index.json for project ${projectId}`, e);
     }
-  } catch (e) {
-    console.error('Failed to load project mapping config', e);
+    return null;
   }
 
   for (const pathKey in modules) {
@@ -42,12 +49,25 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
 
     const project = parts[expIndex + 1];
     
-    // Initialize project if not exists
-    if (!projectsMap.has(project) && projectNames[project]) {
-      projectsMap.set(project, {
-        id: project,
-        name: projectNames[project],
-      });
+    // Skip if this project was already determined to be invalid
+    if (invalidProjects.has(project)) {
+      continue;
+    }
+    
+    // Initialize project if not exists and not yet validated
+    if (!validatedProjects.has(project)) {
+      const projectName = await fetchProjectName(project);
+      if (projectName) {
+        projectsMap.set(project, {
+          id: project,
+          name: projectName,
+        });
+        validatedProjects.add(project);
+      } else {
+        // Mark as invalid and skip this project entirely
+        invalidProjects.add(project);
+        continue;
+      }
     }
 
     // Check if it is KB.txt

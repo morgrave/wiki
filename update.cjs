@@ -136,8 +136,11 @@ async function main() {
 
   const pages = browser.pages();
   const page = pages.length > 0 ? pages[0] : await browser.newPage();
+//  await page.goto(
+//    "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
+//  );
   await page.goto(
-    "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
+    "https://aistudio.google.com/u/1/prompts/17T-ly8tPyFqyKY9ZASsvQ6FL3sOUfLsa",
   );
   await page.waitForSelector("textarea", { timeout: 60000 });
 
@@ -168,7 +171,9 @@ async function main() {
   const latestDir = path.join(folderPath, "KB", "latest");
   const labelDir = path.join(folderPath, "KB", label);
 
-  fs.cpSync(labelDir, latestDir, { recursive: true });
+  // fs.cpSync 대신 fs-extra의 안정적인 메서드 사용 (Segmentation fault 방지)
+  // 기존 데이터를 유지하면서 덮어쓰기 위해 emptyDirSync 제거
+  fs.copySync(labelDir, latestDir, { overwrite: true });
   console.log("📌 KB/latest 복사가 완료되었습니다!");
 
   await browser.close();

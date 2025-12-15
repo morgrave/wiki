@@ -4,16 +4,16 @@ import { viteStaticCopy } from 'vite-plugin-static-copy'
 import path from 'path'
 import fs from 'fs'
 
-// Custom plugin to serve experiment files in Dev
+// Custom plugin to serve campaigns files in Dev
 const serveStaticFiles = (): Plugin => ({
   name: 'serve-static-files',
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
       if (!req.url) return next();
       
-      // Serve /experiment/...
-      if (req.url.startsWith('/experiment')) {
-        const filePath = path.join(process.cwd(), 'experiment', req.url.replace('/experiment', ''));
+      // Serve /campaigns/...
+      if (req.url.startsWith('/campaigns')) {
+        const filePath = path.join(process.cwd(), 'campaigns', req.url.replace('/campaigns', ''));
         if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
           res.setHeader('Content-Type', 'text/markdown');
           const stream = fs.createReadStream(filePath);
@@ -36,7 +36,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'experiment',
+          src: 'campaigns',
           dest: '.' 
         },
         {

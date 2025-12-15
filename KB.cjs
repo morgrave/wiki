@@ -1,7 +1,7 @@
 const fs = require("fs-extra");
 const path = require("path");
 
-const baseDir = path.resolve("experiment");
+const baseDir = path.resolve("campaigns");
 
 // Helper function to load project's index.json
 function loadProjectIndex(projectId) {
@@ -82,7 +82,7 @@ function getMarkdownFiles(dir, relativeTo = dir) {
 async function main() {
   const { default: inquirer } = await import("inquirer");
 
-  // experiment 폴더 내의 디렉터리 목록 가져오기 (index.json이 있는 것만)
+  // campaigns 폴더 내의 디렉터리 목록 가져오기 (index.json이 있는 것만)
   const folders = fs
     .readdirSync(baseDir)
     .filter((file) => {
@@ -92,7 +92,7 @@ async function main() {
     });
 
   if (folders.length === 0) {
-    console.error("experiment 폴더 아래에 index.json을 가진 하위 폴더가 없습니다.");
+    console.error("campaigns 폴더 아래에 index.json을 가진 하위 폴더가 없습니다.");
     return;
   }
 

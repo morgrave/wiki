@@ -2,14 +2,14 @@ const { chromium } = require("playwright");
 const fs = require("fs-extra");
 const path = require("path");
 
-const EXPERIMENT_DIR = path.resolve("experiment");
+const CAMPAIGNS_DIR = path.resolve("campaigns");
 
-async function selectExperimentFolder() {
+async function selectCampaignFolder() {
   const { default: inquirer } = await import("inquirer");
 
   const folders = fs
-    .readdirSync(EXPERIMENT_DIR)
-    .filter((f) => fs.lstatSync(path.join(EXPERIMENT_DIR, f)).isDirectory());
+    .readdirSync(CAMPAIGNS_DIR)
+    .filter((f) => fs.lstatSync(path.join(CAMPAIGNS_DIR, f)).isDirectory());
   const { folder } = await inquirer.prompt({
     name: "folder",
     type: "list",
@@ -112,8 +112,8 @@ async function main() {
   const { default: inquirer } = await import("inquirer");
 
   // 경로 선택
-  const folder = await selectExperimentFolder();
-  const folderPath = path.join(EXPERIMENT_DIR, folder);
+  const folder = await selectCampaignFolder();
+  const folderPath = path.join(CAMPAIGNS_DIR, folder);
   const logPath = await selectLogFile(folderPath);
   const logContent = fs.readFileSync(logPath, "utf-8");
 
@@ -163,7 +163,7 @@ async function main() {
   await runAndWait(page);
 
   // 사용자가 선택한 로그 내용 입력
-  const updatePath = path.join(EXPERIMENT_DIR, "update.txt");
+  const updatePath = path.join(CAMPAIGNS_DIR, "update.txt");
   const updateRaw = fs.readFileSync(updatePath, "utf-8");
   const replacedUpdate = replacePlaceholders(updateRaw, label, logContent);
 

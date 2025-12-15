@@ -10,7 +10,7 @@ interface ProjectIndex {
 // Use Vite's glob import to find files. 
 // We use 'query: ?url' to ensure Vite treats them as assets if imported,
 // but we mostly care about the KEYS (file paths).
-const modules = import.meta.glob(['../../experiment/**/*.md', '../../experiment/**/KB.txt'], { query: '?url', import: 'default' });
+const modules = import.meta.glob(['../../campaigns/**/*.md', '../../campaigns/**/KB.txt'], { query: '?url', import: 'default' });
 
 export async function loadContent(): Promise<{ projects: Project[], documents: Document[] }> {
   const baseUrl = import.meta.env.BASE_URL;
@@ -36,7 +36,7 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
     }
     
     try {
-      const indexRes = await fetch(`${baseUrl}experiment/${encodeURIComponent(projectId)}/index.json`);
+      const indexRes = await fetch(`${baseUrl}campaigns/${encodeURIComponent(projectId)}/index.json`);
       if (indexRes.ok) {
         const indexData = await indexRes.json() as ProjectIndex;
         projectIndexCache.set(projectId, indexData);
@@ -88,7 +88,7 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
     const normalizedPath = pathKey.replace(/\\/g, '/');
     const parts = normalizedPath.split('/');
     
-    const expIndex = parts.indexOf('experiment');
+    const expIndex = parts.indexOf('campaigns');
     if (expIndex === -1 || parts.length < expIndex + 2) {
       continue;
     }
@@ -119,7 +119,7 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
     // Check if it is KB.txt
     if (parts[expIndex + 2] === 'KB.txt') {
       const relativePath = parts.slice(expIndex + 1).map(encodeURIComponent).join('/');
-      const url = `${baseUrl}experiment/${relativePath}`;
+      const url = `${baseUrl}campaigns/${relativePath}`;
       
       // Only set kbUrl if project is in projects list
       const p = projectsMap.get(project);
@@ -141,7 +141,7 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
     const filePath = restParts.join('/').replace(/\.md$/, '');
     
     const relativeDocPath = parts.slice(expIndex + 1).map(encodeURIComponent).join('/');
-    const url = `${baseUrl}experiment/${relativeDocPath}`;
+    const url = `${baseUrl}campaigns/${relativeDocPath}`;
 
     const doc: Document = {
       id: normalizedPath,

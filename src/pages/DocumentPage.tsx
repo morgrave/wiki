@@ -35,6 +35,7 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
   );
 
   const [content, setContent] = React.useState<string>('');
+  const [frontmatter, setFrontmatter] = React.useState<Record<string, any> | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -42,17 +43,34 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
     if (currentDoc?.url) {
       setLoading(true);
       setError(null);
+      setFrontmatter(null); // Reset frontmatter
+      
       fetch(currentDoc.url)
         .then(res => {
           if (!res.ok) throw new Error('Failed to load document');
           return res.text();
         })
         .then(text => {
-           // If the file still has frontmatter, we might want to strip it for display if `react-markdown` doesn't handle it gracefully?
-           // Actually gray-matter handles it on build side. The file on disk HAS frontmatter.
-           // Can we strip it client side? Yes.
-           // Simple regex for frontmatter: ^---[\s\S]*?---
-           const cleanText = text.replace(/^---[\s\S]*?---\s*/, '');
+           // Parse Frontmatter
+           const fmMatch = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+           let parsedFm: Record<string, any> | null = null;
+           let cleanText = text;
+
+           if (fmMatch) {
+             const rawFm = fmMatch[1];
+             parsedFm = {};
+             rawFm.split(/\r?\n/).forEach(line => {
+               const parts = line.split(':');
+               if (parts.length > 1) {
+                 const key = parts[0].trim();
+                 const value = parts.slice(1).join(':').trim();
+                 if (key) parsedFm![key] = value;
+               }
+             });
+             cleanText = text.replace(fmMatch[0], '');
+           }
+
+           setFrontmatter(parsedFm);
            setContent(cleanText);
         })
         .catch(err => setError(err.message))
@@ -104,15 +122,15 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
 
       <h1 className={styles.title}>{currentDoc.title}</h1>
 
-      {currentDoc.frontmatter && Object.keys(currentDoc.frontmatter).length > 0 && (
-        <div className={styles.metadata}>
-          {Object.entries(currentDoc.frontmatter).map(([key, value]) => {
+      {frontmatter && Object.keys(frontmatter).length > 0 && (
+        <div className={styles.metadataGrid}>
+          {Object.entries(frontmatter).map(([key, value]) => {
             if (key === 'title') return null; // Already shown
             return (
-              <div key={key} className={styles.metaRow}>
-                <span className={styles.metaKey}>{key}:</span>
-                <span className={styles.metaValue}>{String(value)}</span>
-              </div>
+              <React.Fragment key={key}>
+                <div className={styles.metaKey}>{key}</div>
+                <div className={styles.metaValue}>{String(value)}</div>
+              </React.Fragment>
             );
           })}
         </div>

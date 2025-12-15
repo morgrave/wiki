@@ -11,28 +11,29 @@
     color: var(--text-primary);
 }
 
-.metadata {
+.metadataGrid {
+    display: grid;
+    grid-template-columns: minmax(100px, max-content) 1fr;
+    gap: 12px 24px;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg);
     margin-bottom: var(--spacing-xl);
-    font-size: 0.9rem;
-}
-
-.metaRow {
-    display: flex;
-    margin-bottom: 4px;
+    font-size: 0.95rem;
+    align-items: baseline;
 }
 
 .metaKey {
-    width: 120px;
     color: var(--text-secondary);
-    font-weight: 500;
+    font-weight: 600;
+    text-transform: capitalize;
+    display: flex; /* To handle alignment if needed */
 }
 
 .metaValue {
     color: var(--text-primary);
+    line-height: 1.5;
 }
 
 .markdown {

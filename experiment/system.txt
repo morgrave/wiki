@@ -15,6 +15,7 @@
 * `races/`: 각 종족의 상세 정보. (YAML: name 등 / 본문: 외형, 특징, 문화, 역사 등)
 * `characters/`: 인물의 상세 정보. (YAML: name 등 / 본문: 배경, 목표, 관계 등)
 * `lore/`: 역사, 개념, 기술, 마법 등 위 분류에 속하지 않는 정보. (YAML: name, category 등 / 본문: 설명 등)
+* `episodes/`: 각 에피소드의 내용(YAML frontmatter: title ** 등 / 본문: 사건) 별도의 파일로 나눠 정리한 폴더입니다. 에피소드 내에서 벌어진 모든 사건을 반드시 포함해야 합니다.
 
 **지식 베이스 파일 구조:**
 
@@ -128,4 +129,16 @@ personality:
 ## 관계
 
 ## 그 외
+```
+
+`episodes/` 의 하위 파일들은 아래와 같은 구조를 가져야 합니다.
+
+```
+---
+title:
+episode_number:
+location:
+main_event:
+---
+
 ```

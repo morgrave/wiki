@@ -125,7 +125,6 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
       {frontmatter && Object.keys(frontmatter).length > 0 && (
         <div className={styles.metadataGrid}>
           {Object.entries(frontmatter).map(([key, value]) => {
-            if (key === 'title') return null; // Already shown
             return (
               <React.Fragment key={key}>
                 <div className={styles.metaKey}>{key}</div>

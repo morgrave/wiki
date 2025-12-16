@@ -125,7 +125,7 @@ async function main() {
   console.log(`🏷️ 라벨: ${label}`);
 
   // 구글 AI 스튜디오 접속
-  const browser = await chromium.launchPersistentContext("./user_data/3", {
+  const browser = await chromium.launchPersistentContext("./user_data/4", {
     headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
     viewport: { width: 2560, height: 1080 },
@@ -154,10 +154,16 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1-T1Rv1SMl0TjQBG7t7L_3aWEnb1RS170"
   // );
   // 듀얼단 3
+  // await page.goto(
+  //   "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"
+  // );
+  // 듀얼단 4
   await page.goto(
-    "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"
+    "https://aistudio.google.com/u/1/prompts/1yq4-iaEh0LIHNm-RH35s8Cn5f-qj-CMa"
   );
   await page.waitForSelector("textarea", { timeout: 60000 });
+
+  await page.waitForTimeout(5000000);
 
   // 이전 대화 내역 전부 삭제
   while ((await page.$("ms-chat-turn-options")) !== null) {

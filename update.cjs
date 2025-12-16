@@ -62,12 +62,8 @@ async function writeTextarea(page, text) {
 }
 
 async function runAndWait(page) {
-  await page.click(".run-button");
-  await page.waitForSelector(".stoppable");
-  await page.waitForSelector(".stoppable", {
-    state: "detached",
-    timeout: 3000000,
-  });
+  await page.locator("button", { hasText: "Run" }).click();
+  await page.locator(".spin").waitFor({ state: "detached", timeout: 3000000 });
 }
 
 function replacePlaceholders(text, label, logContent) {
@@ -88,6 +84,7 @@ async function processMDList(page, baseFolder, label) {
   const { default: clipboard } = await import("clipboardy");
 
   await clickOptionMenu(page, 3);
+  await page.waitForTimeout(500);
   const clipboardContent = await clipboard.read();
   const mdLines = clipboardContent
     .split("\n")
@@ -136,18 +133,22 @@ async function main() {
 
   const pages = browser.pages();
   const page = pages.length > 0 ? pages[0] : await browser.newPage();
-// 패스파인더
-//  await page.goto(
-//    "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
-//  );
-// 시트론 1
-  await page.goto(
-    "https://aistudio.google.com/u/1/prompts/17T-ly8tPyFqyKY9ZASsvQ6FL3sOUfLsa",
-  );
-// 시트론 2
+  // 패스파인더
+  //  await page.goto(
+  //    "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
+  //  );
+  // 시트론 1
+  // await page.goto(
+  //   "https://aistudio.google.com/u/1/prompts/17T-ly8tPyFqyKY9ZASsvQ6FL3sOUfLsa",
+  // );
+  // 시트론 2
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1JAU4fxM4WeuR3-6YNx6dYquzAYnajQze",
   // );
+  // 듀얼단
+  await page.goto(
+    "https://aistudio.google.com/u/1/prompts/1A8cN9pED4TdlWozYfjfQFBi4_YMwRCwb"
+  );
   await page.waitForSelector("textarea", { timeout: 60000 });
 
   // 이전 대화 내역 전부 삭제

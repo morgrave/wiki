@@ -68,9 +68,41 @@ async function writeTextarea(page, text) {
   await page.keyboard.press(`Control+V`);
 }
 
+async function waitForEnter() {
+  return new Promise((resolve) => {
+    const readline = require("readline");
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    rl.question("⚠️ 에러 감지됨. Enter 키를 누르면 계속합니다...", () => {
+      rl.close();
+      resolve();
+    });
+  });
+}
+
 async function runAndWait(page) {
   await page.locator("button", { hasText: "Run" }).click();
-  await page.locator(".spin").waitFor({ state: "detached", timeout: 3000000 });
+  const start = Date.now();
+
+  // spin 이 사라질 때까지 대기
+  await page.locator(".spin").waitFor({
+    state: "detached",
+    timeout: 3000000,
+  });
+
+  const elapsed = Date.now() - start;
+
+  // 2초 안에 끝났으면 에러로 간주
+  if (elapsed < 2000) {
+    console.error(
+      `❌ Run 실행 후 ${elapsed}ms 만에 종료됨 (에러로 간주)`
+    );
+
+    await waitForEnter();
+  }
 }
 
 function replacePlaceholders(text, label, logContent) {
@@ -160,7 +192,7 @@ async function main() {
   console.log(`🏷️ 라벨: ${label}`);
 
   // 구글 AI 스튜디오 접속
-  const browser = await chromium.launchPersistentContext("./user_data/3", {
+  const browser = await chromium.launchPersistentContext("./user_data/4", {
     headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
     viewport: { width: 2560, height: 1080 },
@@ -189,13 +221,13 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1-T1Rv1SMl0TjQBG7t7L_3aWEnb1RS170"
   // );
   // 듀얼단 3 (arm1)
-  await page.goto(
-    "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"
-  );
-  // 듀얼단 4 (arm2)
   // await page.goto(
-  //   "https://aistudio.google.com/u/1/prompts/1yq4-iaEh0LIHNm-RH35s8Cn5f-qj-CMa"
+  //   "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"
   // );
+  // 듀얼단 4 (arm2)
+  await page.goto(
+    "https://aistudio.google.com/u/1/prompts/1yq4-iaEh0LIHNm-RH35s8Cn5f-qj-CMa"
+  );
   // 듀얼단 5 (arm3)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1l3sAth_WmfbEWIv3ei17B0IDGNmJjWzK"
@@ -219,7 +251,7 @@ async function main() {
   await page.waitForSelector("textarea", { timeout: 60000 });
 
   if (label === "") {
-    await page.waitForTimeout(5000000);
+    await waitForEnter();
   }
 
   // 이전 대화 내역 전부 삭제

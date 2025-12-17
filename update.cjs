@@ -160,7 +160,7 @@ async function main() {
   console.log(`🏷️ 라벨: ${label}`);
 
   // 구글 AI 스튜디오 접속
-  const browser = await chromium.launchPersistentContext("./user_data/9", {
+  const browser = await chromium.launchPersistentContext("./user_data/3", {
     headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
     viewport: { width: 2560, height: 1080 },
@@ -189,9 +189,9 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1-T1Rv1SMl0TjQBG7t7L_3aWEnb1RS170"
   // );
   // 듀얼단 3 (arm1)
-  // await page.goto(
-  //   "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"
-  // );
+  await page.goto(
+    "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"
+  );
   // 듀얼단 4 (arm2)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1yq4-iaEh0LIHNm-RH35s8Cn5f-qj-CMa"
@@ -213,9 +213,9 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1fbB38xzGoF8ylmS2o_M23S5cxUld-gQY"
   // );
   // 듀얼단 9 (arm7)
-  await page.goto(
-    "https://aistudio.google.com/u/1/prompts/1O8zK5oNh79tEh9wE3ILt2yWrGM33gbcn"
-  );
+  // await page.goto(
+  //   "https://aistudio.google.com/u/1/prompts/1O8zK5oNh79tEh9wE3ILt2yWrGM33gbcn"
+  // );
   await page.waitForSelector("textarea", { timeout: 60000 });
 
   if (label === "") {

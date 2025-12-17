@@ -160,7 +160,7 @@ async function main() {
   console.log(`🏷️ 라벨: ${label}`);
 
   // 구글 AI 스튜디오 접속
-  const browser = await chromium.launchPersistentContext("./user_data/8", {
+  const browser = await chromium.launchPersistentContext("./user_data/9", {
     headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
     viewport: { width: 2560, height: 1080 },
@@ -209,8 +209,12 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1vkHW882mtbEfjIdpK42Jg_LOUiZVvTOR"
   // );
   // 듀얼단 8 (arm6)
+  // await page.goto(
+  //   "https://aistudio.google.com/u/1/prompts/1fbB38xzGoF8ylmS2o_M23S5cxUld-gQY"
+  // );
+  // 듀얼단 9 (arm7)
   await page.goto(
-    "https://aistudio.google.com/u/1/prompts/1fbB38xzGoF8ylmS2o_M23S5cxUld-gQY"
+    "https://aistudio.google.com/u/1/prompts/1O8zK5oNh79tEh9wE3ILt2yWrGM33gbcn"
   );
   await page.waitForSelector("textarea", { timeout: 60000 });
 

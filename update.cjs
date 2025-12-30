@@ -192,7 +192,7 @@ async function main() {
   console.log(`🏷️ 라벨: ${label}`);
 
   // 구글 AI 스튜디오 접속
-  const browser = await chromium.launchPersistentContext("./user_data/7", {
+  const browser = await chromium.launchPersistentContext("./user_data/8", {
     headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
     viewport: { width: 2560, height: 1080 },
@@ -237,13 +237,13 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/18cXzpP80m6cwSq-GcsnfK0zyApbRXRcM"
   // );
   // 듀얼단 7 (korea)
-  await page.goto(
-    "https://aistudio.google.com/u/1/prompts/1vkHW882mtbEfjIdpK42Jg_LOUiZVvTOR"
-  );
-  // 듀얼단 8 (arm6)
   // await page.goto(
-  //   "https://aistudio.google.com/u/1/prompts/1fbB38xzGoF8ylmS2o_M23S5cxUld-gQY"
+  //   "https://aistudio.google.com/u/1/prompts/1vkHW882mtbEfjIdpK42Jg_LOUiZVvTOR"
   // );
+  // 듀얼단 8 (arm6)
+  await page.goto(
+    "https://aistudio.google.com/u/1/prompts/1fbB38xzGoF8ylmS2o_M23S5cxUld-gQY"
+  );
   // 듀얼단 9 (arm7)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1O8zK5oNh79tEh9wE3ILt2yWrGM33gbcn"
@@ -255,13 +255,13 @@ async function main() {
   }
 
   // 이전 대화 내역 전부 삭제
-  // await eraseChatLog(page);
+  await eraseChatLog(page);
 
   // KB.txt 내용 입력
-  // await writeKBFile(page, folderPath);
+  await writeKBFile(page, folderPath);
 
   // 사용자가 선택한 로그 내용 입력
-  // await writeLogFile(page, label, logContent);
+  await writeLogFile(page, label, logContent);
 
   // 업데이트된 지식 베이스 파일 목록 추출 및 반영
   await processMDList(page, folderPath, label);

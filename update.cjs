@@ -255,13 +255,13 @@ async function main() {
   }
 
   // 이전 대화 내역 전부 삭제
-  await eraseChatLog(page);
+  // await eraseChatLog(page);
 
   // KB.txt 내용 입력
-  await writeKBFile(page, folderPath);
+  // await writeKBFile(page, folderPath);
 
   // 사용자가 선택한 로그 내용 입력
-  await writeLogFile(page, label, logContent);
+  // await writeLogFile(page, label, logContent);
 
   // 업데이트된 지식 베이스 파일 목록 추출 및 반영
   await processMDList(page, folderPath, label);

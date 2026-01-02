@@ -192,7 +192,7 @@ async function main() {
   console.log(`🏷️ 라벨: ${label}`);
 
   // 구글 AI 스튜디오 접속
-  const browser = await chromium.launchPersistentContext("./user_data/1", {
+  const browser = await chromium.launchPersistentContext("./user_data/2", {
     headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
     viewport: { width: 2560, height: 1080 },
@@ -213,13 +213,13 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1JAU4fxM4WeuR3-6YNx6dYquzAYnajQze",
   // );
   // 듀얼단
-  await page.goto(
-    "https://aistudio.google.com/u/1/prompts/1A8cN9pED4TdlWozYfjfQFBi4_YMwRCwb"
-  );
-  // 듀얼단 2
   // await page.goto(
-  //   "https://aistudio.google.com/u/1/prompts/1-T1Rv1SMl0TjQBG7t7L_3aWEnb1RS170"
+  //   "https://aistudio.google.com/u/1/prompts/1A8cN9pED4TdlWozYfjfQFBi4_YMwRCwb"
   // );
+  // 듀얼단 2
+  await page.goto(
+    "https://aistudio.google.com/u/1/prompts/1-T1Rv1SMl0TjQBG7t7L_3aWEnb1RS170"
+  );
   // 듀얼단 3 (arm1)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"

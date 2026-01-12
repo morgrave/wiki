@@ -22,6 +22,10 @@
   --radius-lg: 0.5rem;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 * {
   box-sizing: border-box;
 }

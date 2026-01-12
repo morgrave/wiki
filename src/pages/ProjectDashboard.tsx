@@ -1,7 +1,7 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FileText, FolderOpen, Users } from 'lucide-react';
+import { FileText, FolderOpen, Users, ChevronDown, ChevronRight } from 'lucide-react';
 import type { Project, Document } from '../types';
 import { naturalCompare } from '../utils/naturalSort';
 import { getDocumentFrontmatter } from '../utils/contentLoader';
@@ -22,6 +22,20 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
   
   // Use 'latest' version for dashboard
   const currentVersion = 'latest';
+
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+
+  const toggleSection = (section: string) => {
+    setCollapsedSections(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(section)) {
+        newSet.delete(section);
+      } else {
+        newSet.add(section);
+      }
+      return newSet;
+    });
+  };
 
   const projectDocs = useMemo(() => {
     if (!projectId) return [];
@@ -116,104 +130,125 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
       {/* Heroes Section */}
       {heroDocs.length > 0 && (
         <section className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div 
+            className={styles.sectionHeader} 
+            onClick={() => toggleSection('heroes')}
+            style={{ cursor: 'pointer', userSelect: 'none' }}
+          >
             <h3 className={styles.sectionTitle}>
+              {collapsedSections.has('heroes') ? <ChevronRight size={20} /> : <ChevronDown size={20} />}
               <Users size={20} />
               Heroes
             </h3>
             <span className={styles.badge}>{heroDocs.length}</span>
           </div>
-          <div className={styles.heroList}>
-            {heroDocs.map(doc => {
-                const fm = frontmatters[doc.id] || {};
-                
-                return (
-                  <Link 
-                    key={doc.id} 
-                    to={`/${projectId}/${doc.filePath}/${currentVersion}`}
-                    className={styles.heroCard}
-                  >
-                    <div className={styles.heroImageContainer}>
-                        {doc.thumbnail ? (
-                            <img src={doc.thumbnail} alt={doc.docName} className={styles.heroImage} />
-                        ) : (
-                            <div className={styles.heroFallback}>
-                                <Users size={32} />
-                            </div>
-                        )}
-                    </div>
-                    <div className={styles.heroContent}>
-                        <div className={styles.heroName}>{doc.docName}</div>
-                        {fm.title && <div className={styles.heroTitle}>{fm.title}</div>}
-                    </div>
-                  </Link>
-                );
-            })}
-          </div>
+          {!collapsedSections.has('heroes') && (
+            <div className={styles.heroList}>
+              {heroDocs.map(doc => {
+                  const fm = frontmatters[doc.id] || {};
+                  
+                  return (
+                    <Link 
+                      key={doc.id} 
+                      to={`/${projectId}/${doc.filePath}/${currentVersion}`}
+                      className={styles.heroCard}
+                    >
+                      <div className={styles.heroImageContainer}>
+                          {doc.thumbnail ? (
+                              <img src={doc.thumbnail} alt={doc.docName} className={styles.heroImage} />
+                          ) : (
+                              <div className={styles.heroFallback}>
+                                  <Users size={32} />
+                              </div>
+                          )}
+                      </div>
+                      <div className={styles.heroContent}>
+                          <div className={styles.heroName}>{doc.docName}</div>
+                          {fm.title && <div className={styles.heroTitle}>{fm.title}</div>}
+                      </div>
+                    </Link>
+                  );
+              })}
+            </div>
+          )}
         </section>
       )}
 
       {/* Root Documents */}
       {groups.rootDocs.length > 0 && (
         <section className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div 
+            className={styles.sectionHeader}
+            onClick={() => toggleSection('general')}
+            style={{ cursor: 'pointer', userSelect: 'none' }}
+          >
             <h3 className={styles.sectionTitle}>
+              {collapsedSections.has('general') ? <ChevronRight size={20} /> : <ChevronDown size={20} />}
               <FolderOpen size={20} />
               General
             </h3>
             <span className={styles.badge}>{groups.rootDocs.length}</span>
           </div>
-          <div className={styles.docList}>
-            {groups.rootDocs.map(doc => (
-              <Link 
-                key={doc.id} 
-                to={`/${projectId}/${doc.filePath}/${currentVersion}`}
-                className={styles.docItem}
-              >
-                <FileText size={16} className={styles.docIcon} />
-                <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                  <span className="truncate" title={doc.docName}>{doc.docName}</span>
-                  {frontmatters[doc.id]?.title && (
-                    <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={frontmatters[doc.id].title}>
-                      {frontmatters[doc.id].title}
-                    </span>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
+          {!collapsedSections.has('general') && (
+            <div className={styles.docList}>
+              {groups.rootDocs.map(doc => (
+                <Link 
+                  key={doc.id} 
+                  to={`/${projectId}/${doc.filePath}/${currentVersion}`}
+                  className={styles.docItem}
+                >
+                  <FileText size={16} className={styles.docIcon} />
+                  <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                    <span className="truncate" title={doc.docName}>{doc.docName}</span>
+                    {frontmatters[doc.id]?.title && (
+                      <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={frontmatters[doc.id].title}>
+                        {frontmatters[doc.id].title}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
       {/* Categories */}
       {sortedCategories.map(category => (
         <section key={category} className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div 
+            className={styles.sectionHeader}
+            onClick={() => toggleSection(category)}
+            style={{ cursor: 'pointer', userSelect: 'none' }}
+          >
             <h3 className={styles.sectionTitle}>
+              {collapsedSections.has(category) ? <ChevronRight size={20} /> : <ChevronDown size={20} />}
               <FolderOpen size={20} />
               {category}
             </h3>
             <span className={styles.badge}>{groups.grouped[category].length}</span>
           </div>
-          <div className={styles.docList}>
-            {groups.grouped[category].map(doc => (
-              <Link 
-                key={doc.id} 
-                to={`/${projectId}/${doc.filePath}/${currentVersion}`}
-                className={styles.docItem}
-              >
-                <FileText size={16} className={styles.docIcon} />
-                <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                  <span className="truncate" title={doc.docName}>{doc.docName}</span>
-                  {frontmatters[doc.id]?.title && (
-                    <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={frontmatters[doc.id].title}>
-                      {frontmatters[doc.id].title}
-                    </span>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
+          {!collapsedSections.has(category) && (
+            <div className={styles.docList}>
+              {groups.grouped[category].map(doc => (
+                <Link 
+                  key={doc.id} 
+                  to={`/${projectId}/${doc.filePath}/${currentVersion}`}
+                  className={styles.docItem}
+                >
+                  <FileText size={16} className={styles.docIcon} />
+                  <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                    <span className="truncate" title={doc.docName}>{doc.docName}</span>
+                    {frontmatters[doc.id]?.title && (
+                      <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={frontmatters[doc.id].title}>
+                        {frontmatters[doc.id].title}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </section>
       ))}
       

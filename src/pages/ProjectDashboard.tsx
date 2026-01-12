@@ -1,7 +1,7 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FileText, FolderOpen } from 'lucide-react';
+import { FileText, FolderOpen, Users } from 'lucide-react';
 import type { Project, Document } from '../types';
 import { naturalCompare } from '../utils/naturalSort';
 import { getDocumentFrontmatter } from '../utils/contentLoader';
@@ -15,7 +15,8 @@ interface ProjectDashboardProps {
 const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents }) => {
   const { projectId } = useParams<{ projectId: string }>();
   
-  const [titles, setTitles] = useState<Record<string, string>>({});
+  // Store full frontmatter now (title, image, etc.)
+  const [frontmatters, setFrontmatters] = useState<Record<string, any>>({});
   
   const currentProject = projects.find(p => p.id === projectId);
   
@@ -28,30 +29,56 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
   }, [documents, projectId, currentVersion]);
 
   useEffect(() => {
-    const loadTitles = async () => {
-      const newTitles: Record<string, string> = {};
+    const loadFrontmatters = async () => {
+      const newFrontmatters: Record<string, any> = {};
+      
       const promises = projectDocs.map(async (doc) => {
         const fm = await getDocumentFrontmatter(doc);
-        if (fm && fm.title) {
-          newTitles[doc.id] = fm.title;
+        if (fm) {
+          newFrontmatters[doc.id] = fm;
         }
       });
       
       await Promise.all(promises);
-      setTitles(prev => ({ ...prev, ...newTitles }));
+      setFrontmatters(prev => ({ ...prev, ...newFrontmatters }));
     };
     
     if (projectDocs.length > 0) {
-      loadTitles();
+        loadFrontmatters();
     }
   }, [projectDocs]);
 
-  // Group by top-level folder
+  // Separate Heroes and other docs
+  const { heroDocs, normalDocs } = useMemo(() => {
+    const players = currentProject?.players || [];
+    const heroes: Document[] = [];
+    const others: Document[] = [];
+
+    projectDocs.forEach(doc => {
+      // Check if docName is in players list (case-insensitive perhaps? assuming exact match for now based on JSON)
+      if (players.includes(doc.docName)) {
+        heroes.push(doc);
+      } else {
+        others.push(doc);
+      }
+    });
+
+    // Sort heroes by order in player array if possible, or naturally
+    heroes.sort((a, b) => {
+        const idxA = players.indexOf(a.docName);
+        const idxB = players.indexOf(b.docName);
+        return idxA - idxB;
+    });
+
+    return { heroDocs: heroes, normalDocs: others };
+  }, [projectDocs, currentProject]);
+
+  // Group normal docs by top-level folder
   const groups = useMemo(() => {
     const grouped: Record<string, Document[]> = {};
     const rootDocs: Document[] = [];
 
-    projectDocs.forEach(doc => {
+    normalDocs.forEach(doc => {
       const parts = doc.filePath.split('/');
       if (parts.length > 1) {
         const category = parts[0];
@@ -69,7 +96,7 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
     rootDocs.sort((a, b) => naturalCompare(a.filePath, b.filePath));
 
     return { grouped, rootDocs };
-  }, [projectDocs]);
+  }, [normalDocs]);
 
   if (!currentProject) {
     return <div className={styles.dashboard}>Project not found</div>;
@@ -85,6 +112,46 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
           Dashboard • {currentVersion} • {projectDocs.length} Documents
         </div>
       </header>
+
+      {/* Heroes Section */}
+      {heroDocs.length > 0 && (
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>
+              <Users size={20} />
+              Heroes
+            </h3>
+            <span className={styles.badge}>{heroDocs.length}</span>
+          </div>
+          <div className={styles.heroList}>
+            {heroDocs.map(doc => {
+                const fm = frontmatters[doc.id] || {};
+                
+                return (
+                  <Link 
+                    key={doc.id} 
+                    to={`/${projectId}/${doc.filePath}/${currentVersion}`}
+                    className={styles.heroCard}
+                  >
+                    <div className={styles.heroImageContainer}>
+                        {doc.thumbnail ? (
+                            <img src={doc.thumbnail} alt={doc.docName} className={styles.heroImage} />
+                        ) : (
+                            <div className={styles.heroFallback}>
+                                <Users size={32} />
+                            </div>
+                        )}
+                    </div>
+                    <div className={styles.heroContent}>
+                        <div className={styles.heroName}>{doc.docName}</div>
+                        {fm.title && <div className={styles.heroTitle}>{fm.title}</div>}
+                    </div>
+                  </Link>
+                );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Root Documents */}
       {groups.rootDocs.length > 0 && (
@@ -106,9 +173,9 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
                 <FileText size={16} className={styles.docIcon} />
                 <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                   <span className="truncate" title={doc.docName}>{doc.docName}</span>
-                  {titles[doc.id] && (
-                    <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={titles[doc.id]}>
-                      {titles[doc.id]}
+                  {frontmatters[doc.id]?.title && (
+                    <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={frontmatters[doc.id].title}>
+                      {frontmatters[doc.id].title}
                     </span>
                   )}
                 </div>
@@ -138,9 +205,9 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
                 <FileText size={16} className={styles.docIcon} />
                 <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                   <span className="truncate" title={doc.docName}>{doc.docName}</span>
-                  {titles[doc.id] && (
-                    <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={titles[doc.id]}>
-                      {titles[doc.id]}
+                  {frontmatters[doc.id]?.title && (
+                    <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={frontmatters[doc.id].title}>
+                      {frontmatters[doc.id].title}
                     </span>
                   )}
                 </div>

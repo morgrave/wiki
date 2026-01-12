@@ -14,12 +14,14 @@ export interface Document {
   url: string; // Path to fetch content
   fullPath?: string; // Optional dev path
   sourceProject?: string; // Original project if inherited via dependency
+  thumbnail?: string; // URL to hero image/thumbnail if exists
 }
 
 export interface Project {
   id: string;
   name: string;
   kbUrl?: string;
+  players?: string[]; // List of hero/player names
 }
 
 export interface ContentData {

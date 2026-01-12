@@ -5,15 +5,19 @@ import type { Project, Document } from '../types';
 interface ProjectIndex {
   name: string;
   dependency?: string[];
+  player?: string[];
 }
 
 // Use Vite's glob import to find files. 
 // We use 'query: ?url' to ensure Vite treats them as assets if imported,
 // but we mostly care about the KEYS (file paths).
 const modules = import.meta.glob(['../../campaigns/**/*.md', '../../campaigns/**/KB.txt'], { query: '?url', import: 'default' });
+const imageModules = import.meta.glob(['../../campaigns/**/*.{png,jpg,jpeg,bmp,gif}']);
 
 // Cache for document frontmatter
 const frontmatterCache = new Map<string, any>();
+// Cache for inflight frontmatter requests to prevent thundering herd
+const pendingFrontmatterRequests = new Map<string, Promise<any>>();
 
 export async function loadContent(): Promise<{ projects: Project[], documents: Document[] }> {
   const baseUrl = import.meta.env.BASE_URL;
@@ -28,8 +32,19 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
   
   // Store all raw documents by project
   const rawDocumentsByProject = new Map<string, Document[]>();
+  
+  // Build map of available images (checking existence only)
+  // Map key (normalized path w/o extension) -> Image Extension/Path Info
+  const validImageExtensions = new Map<string, string>(); // key -> original path
+  
+  for (const path in imageModules) {
+    const normalized = path.replace(/\\/g, '/');
+    const key = normalized.substring(0, normalized.lastIndexOf('.')).toLowerCase();
+    validImageExtensions.set(key, path);
+  }
+
   // Store project info including kbUrl
-  const projectsMap = new Map<string, { id: string; name: string; kbUrl?: string }>();
+  const projectsMap = new Map<string, { id: string; name: string; kbUrl?: string; players?: string[] }>();
 
   // Helper function to fetch project index.json
   async function fetchProjectIndex(projectId: string): Promise<ProjectIndex | null> {
@@ -111,6 +126,7 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
         projectsMap.set(project, {
           id: project,
           name: projectIndex.name,
+          players: projectIndex.player,
         });
         validatedProjects.add(project);
       } else {
@@ -155,11 +171,29 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
       title: docName,
       frontmatter: {},
       url,
-      fullPath: normalizedPath
+      fullPath: normalizedPath,
+      thumbnail: undefined // Set below
     };
+    
+    // Resolve thumbnail URL manually if image exists
+    const key = normalizedPath.replace(/\.md$/, '').toLowerCase();
+    if (validImageExtensions.has(key)) {
+        const imgPath = validImageExtensions.get(key)!;
+        // imgPath is like "../../campaigns/S3/Image.png"
+        // We need to convert it to a URL like `${baseUrl}campaigns/S3/Image.png`
+        // existing logic: parts = imgPath.split('/') -> ['..', '..', 'campaigns', 'S3', 'Image.png']
+        const imgParts = imgPath.split('/');
+        const imgExpIndex = imgParts.indexOf('campaigns');
+        if (imgExpIndex !== -1) {
+             const relativeImgPath = imgParts.slice(imgExpIndex + 1).map(encodeURIComponent).join('/');
+             doc.thumbnail = `${baseUrl}campaigns/${relativeImgPath}`;
+        }
+    }
     
     rawDocumentsByProject.get(project)!.push(doc);
   }
+
+
 
   // Second pass: resolve dependencies and merge documents
   // Only process projects that have valid index.json (in validatedProjects)
@@ -193,6 +227,7 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
     // Then add own documents (highest priority, overrides dependencies)
     for (const ownDoc of projectDocs) {
       const key = `${ownDoc.version}:${ownDoc.filePath}`;
+      
       docMap.set(key, ownDoc); // Own docs don't have sourceProject
     }
     
@@ -209,33 +244,47 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
 
 export async function getDocumentFrontmatter(doc: Document): Promise<any> {
     // Check cache first
-    // Use doc.id or doc.url as key
-    if (frontmatterCache.has(doc.id)) {
-        return frontmatterCache.get(doc.id);
+    // Use doc.url as key to share cache across projects since content is same
+    if (frontmatterCache.has(doc.url)) {
+        return frontmatterCache.get(doc.url);
+    }
+    
+    // Check inflight requests
+    if (pendingFrontmatterRequests.has(doc.url)) {
+        return pendingFrontmatterRequests.get(doc.url);
     }
 
-    try {
-        const response = await fetch(doc.url);
-        if (!response.ok) throw new Error('Failed to fetch document');
-        const text = await response.text();
-        
-        // Simple frontmatter parser
-        const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-        let frontmatter: any = {};
-        
-        if (match) {
-            const content = match[1];
-            // Extract title
-            const titleMatch = content.match(/^title:\s*(.*)$/m);
-            if (titleMatch) {
-                frontmatter.title = titleMatch[1].trim().replace(/^["'](.*)["']$/, '$1');
+    const promise = (async () => {
+        try {
+            const response = await fetch(doc.url);
+            if (!response.ok) throw new Error('Failed to fetch document');
+            const text = await response.text();
+            
+            // Simple frontmatter parser
+            const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+            let frontmatter: any = {};
+            
+            if (match) {
+                const content = match[1];
+                // Extract title
+                const titleMatch = content.match(/^title:\s*(.*)$/m);
+                if (titleMatch) {
+                    frontmatter.title = titleMatch[1].trim().replace(/^["'](.*)["']$/, '$1');
+                }
             }
+            
+            frontmatterCache.set(doc.url, frontmatter);
+            return frontmatter;
+        } catch (error) {
+            console.error('Error fetching frontmatter for', doc.filePath, error);
+            // Cache empty object to prevent retry loops on failure
+            frontmatterCache.set(doc.url, {});
+            return {};
+        } finally {
+            pendingFrontmatterRequests.delete(doc.url);
         }
-        
-        frontmatterCache.set(doc.id, frontmatter);
-        return frontmatter;
-    } catch (error) {
-        console.error('Error fetching frontmatter for', doc.filePath, error);
-        return {};
-    }
+    })();
+
+    pendingFrontmatterRequests.set(doc.url, promise);
+    return promise;
 }

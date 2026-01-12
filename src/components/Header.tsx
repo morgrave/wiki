@@ -11,6 +11,11 @@ interface HeaderProps {
   onMenuToggle?: () => void;
 }
 
+const LINKS = [
+  { name: '엑스페리온 저장소', url: 'https://morgrave.github.io/xperion/' },
+  { name: '모그레이브 저장소', url: 'https://morgrave.github.io/bookstore/' },
+];
+
 const Header: React.FC<HeaderProps> = ({ documents, projects, onMenuToggle }) => {
   const { projectId, version } = useParams<{ projectId: string; version?: string }>();
   const navigate = useNavigate();
@@ -88,7 +93,25 @@ const Header: React.FC<HeaderProps> = ({ documents, projects, onMenuToggle }) =>
           <Box className="text-blue-500" />
           Wiki
         </Link>
-        <div>{/* Breadcrumbs could go here */}</div>
+        
+        <div className={styles.divider} />
+
+        <div className={styles.linkGroup}>
+          {LINKS.map((link, index) => (
+            <React.Fragment key={link.name}>
+              {index > 0 && <div className={styles.divider} />}
+              <a 
+                href={link.url}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={styles.externalLink}
+                title={link.name}
+              >
+                <span>{link.name}</span>
+              </a>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
       
       {projectId && (
@@ -98,7 +121,7 @@ const Header: React.FC<HeaderProps> = ({ documents, projects, onMenuToggle }) =>
             <input
               type="text"
               className={styles.searchInput}
-              placeholder={`${projectDisplayName} 내부에서 검색`}
+              placeholder={`${projectDisplayName}`}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);

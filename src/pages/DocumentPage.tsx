@@ -10,6 +10,13 @@ import styles from './DocumentPage.module.css';
 
 import { naturalCompare } from '../utils/naturalSort';
 
+// ** 바로 옆에 특수문자가 있는 경우 zero-width space를 삽입하여 정상 렌더링되게 함
+function fixBoldMarkers(text: string): string {
+  return text
+    .replace(/\*\*([''"""「」『』【】])/g, '**\u200B$1')
+    .replace(/([''"""「」『』【】])\*\*/g, '$1\u200B**');
+}
+
 interface DocumentPageProps {
   documents: Document[];
 }
@@ -82,7 +89,7 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
            }
 
            setFrontmatter(parsedFm);
-           setContent(cleanText);
+           setContent(fixBoldMarkers(cleanText));
         })
         .catch(err => setError(err.message))
         .finally(() => setLoading(false));

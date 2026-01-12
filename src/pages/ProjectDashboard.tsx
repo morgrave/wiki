@@ -1,9 +1,10 @@
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FileText, FolderOpen } from 'lucide-react';
 import type { Project, Document } from '../types';
 import { naturalCompare } from '../utils/naturalSort';
+import { getDocumentFrontmatter } from '../utils/contentLoader';
 import styles from './ProjectDashboard.module.css';
 
 interface ProjectDashboardProps {
@@ -14,6 +15,8 @@ interface ProjectDashboardProps {
 const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents }) => {
   const { projectId } = useParams<{ projectId: string }>();
   
+  const [titles, setTitles] = useState<Record<string, string>>({});
+  
   const currentProject = projects.find(p => p.id === projectId);
   
   // Use 'latest' version for dashboard
@@ -23,6 +26,25 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
     if (!projectId) return [];
     return documents.filter(d => d.project === projectId && d.version === currentVersion);
   }, [documents, projectId, currentVersion]);
+
+  useEffect(() => {
+    const loadTitles = async () => {
+      const newTitles: Record<string, string> = {};
+      const promises = projectDocs.map(async (doc) => {
+        const fm = await getDocumentFrontmatter(doc);
+        if (fm && fm.title) {
+          newTitles[doc.id] = fm.title;
+        }
+      });
+      
+      await Promise.all(promises);
+      setTitles(prev => ({ ...prev, ...newTitles }));
+    };
+    
+    if (projectDocs.length > 0) {
+      loadTitles();
+    }
+  }, [projectDocs]);
 
   // Group by top-level folder
   const groups = useMemo(() => {
@@ -82,7 +104,14 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
                 className={styles.docItem}
               >
                 <FileText size={16} className={styles.docIcon} />
-                <span className="truncate" title={doc.title}>{doc.title}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  <span className="truncate" title={doc.docName}>{doc.docName}</span>
+                  {titles[doc.id] && (
+                    <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={titles[doc.id]}>
+                      {titles[doc.id]}
+                    </span>
+                  )}
+                </div>
               </Link>
             ))}
           </div>
@@ -107,7 +136,14 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
                 className={styles.docItem}
               >
                 <FileText size={16} className={styles.docIcon} />
-                <span className="truncate" title={doc.title}>{doc.title}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  <span className="truncate" title={doc.docName}>{doc.docName}</span>
+                  {titles[doc.id] && (
+                    <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={titles[doc.id]}>
+                      {titles[doc.id]}
+                    </span>
+                  )}
+                </div>
               </Link>
             ))}
           </div>

@@ -12,6 +12,9 @@ interface ProjectIndex {
 // but we mostly care about the KEYS (file paths).
 const modules = import.meta.glob(['../../campaigns/**/*.md', '../../campaigns/**/KB.txt'], { query: '?url', import: 'default' });
 
+// Cache for document frontmatter
+const frontmatterCache = new Map<string, any>();
+
 export async function loadContent(): Promise<{ projects: Project[], documents: Document[] }> {
   const baseUrl = import.meta.env.BASE_URL;
   
@@ -202,4 +205,37 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
   const projects = Array.from(projectsMap.values());
 
   return { projects, documents };
+}
+
+export async function getDocumentFrontmatter(doc: Document): Promise<any> {
+    // Check cache first
+    // Use doc.id or doc.url as key
+    if (frontmatterCache.has(doc.id)) {
+        return frontmatterCache.get(doc.id);
+    }
+
+    try {
+        const response = await fetch(doc.url);
+        if (!response.ok) throw new Error('Failed to fetch document');
+        const text = await response.text();
+        
+        // Simple frontmatter parser
+        const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+        let frontmatter: any = {};
+        
+        if (match) {
+            const content = match[1];
+            // Extract title
+            const titleMatch = content.match(/^title:\s*(.*)$/m);
+            if (titleMatch) {
+                frontmatter.title = titleMatch[1].trim().replace(/^["'](.*)["']$/, '$1');
+            }
+        }
+        
+        frontmatterCache.set(doc.id, frontmatter);
+        return frontmatter;
+    } catch (error) {
+        console.error('Error fetching frontmatter for', doc.filePath, error);
+        return {};
+    }
 }

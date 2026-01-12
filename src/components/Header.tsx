@@ -40,11 +40,16 @@ const Header: React.FC<HeaderProps> = ({ documents, projects, onMenuToggle }) =>
   const results = useMemo(() => {
     if (!query || !projectId) return [];
     
-    const lowerQ = query.toLowerCase();
-    return projectDocs.filter(d => 
-      d.title.toLowerCase().includes(lowerQ) || 
-      d.filePath.toLowerCase().includes(lowerQ)
-    ).slice(0, 10); // Limit results
+    // Normalize query: treat underscores as spaces for loose matching
+    const normalizedQuery = query.toLowerCase().replace(/_/g, ' ');
+    
+    return projectDocs.filter(d => {
+      const normalizedTitle = d.title.toLowerCase().replace(/_/g, ' ');
+      const normalizedPath = d.filePath.toLowerCase().replace(/_/g, ' ');
+      
+      return normalizedTitle.includes(normalizedQuery) || 
+             normalizedPath.includes(normalizedQuery);
+    }).slice(0, 10); // Limit results
   }, [query, projectDocs, projectId]);
 
   useEffect(() => {
@@ -65,14 +70,26 @@ const Header: React.FC<HeaderProps> = ({ documents, projects, onMenuToggle }) =>
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      if (results.length > 0) {
-        // Find exact match first
-        const exact = results.find(r => r.title.toLowerCase() === query.toLowerCase());
-        if (exact) {
-           handleSelect(exact);
-        } else {
-           handleSelect(results[0]);
-        }
+      const trimmedQuery = query.trim();
+      if (!trimmedQuery) return;
+
+      const normalizedQuery = trimmedQuery.toLowerCase().replace(/_/g, ' ');
+
+      // Check for exact match in all project docs (case-insensitive, ignoring _ vs space)
+      const exact = projectDocs.find(d => {
+        const normalizedTitle = d.title.toLowerCase().replace(/_/g, ' ');
+        // Also check if docName matches (just in case title differs in future)
+        const normalizedDocName = d.docName.toLowerCase().replace(/_/g, ' ');
+        
+        return normalizedTitle === normalizedQuery || normalizedDocName === normalizedQuery;
+      });
+      
+      if (exact) {
+         handleSelect(exact);
+      } else {
+         // No exact match, navigate to search page
+         setIsOpen(false);
+         navigate(`/${projectId}/search?q=${encodeURIComponent(trimmedQuery)}`);
       }
     }
   };

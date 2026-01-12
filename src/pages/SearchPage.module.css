@@ -1,0 +1,97 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    color: #202124;
+}
+
+.header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #dfe1e5;
+    padding-bottom: 1rem;
+}
+
+.stats {
+    color: #70757a;
+    font-size: 0.875rem;
+}
+
+.resultsList {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.resultItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.resultUrl {
+    font-size: 0.875rem;
+    color: #202124;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.resultTitle {
+    font-size: 1.25rem;
+    color: #1a0dab;
+    text-decoration: none;
+    line-height: 1.3;
+    margin-bottom: 0.25rem;
+}
+
+.resultTitle:hover {
+    text-decoration: underline;
+}
+
+.resultSnippet {
+    font-size: 0.875rem;
+    line-height: 1.58;
+    color: #4d5156;
+    word-wrap: break-word;
+}
+
+.match {
+    font-weight: bold;
+    color: #ea4335;
+    /* Using a subtle red/highlight color or just bold black */
+    color: #3c4043;
+}
+
+.loading {
+    padding: 2rem;
+    text-align: center;
+    color: #70757a;
+}
+
+.noResults {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: #202124;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark mode support if applicable, though Google is white usually. 
+   Assuming the wiki has a dark mode, might need to adjust.
+   For now I'll stick to a neutral base that looks "Google-y" but respects theme if possible.
+   But pure CSS modules without theme variables might hardcode light mode.
+   I'll try to use system colors or CSS variables if the project has them.
+   Looking at App.css might help.
+*/

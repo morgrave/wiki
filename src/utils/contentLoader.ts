@@ -242,9 +242,40 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
   return { projects, documents };
 }
 
+const documentTextCache = new Map<string, string>();
+const pendingTextRequests = new Map<string, Promise<string>>();
+
+export async function getDocumentContent(doc: Document): Promise<string> {
+    const url = doc.url;
+    if (documentTextCache.has(url)) {
+        return documentTextCache.get(url)!;
+    }
+
+    if (pendingTextRequests.has(url)) {
+        return pendingTextRequests.get(url)!;
+    }
+
+    const promise = (async () => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch document');
+            const text = await response.text();
+            documentTextCache.set(url, text);
+            return text;
+        } catch (error) {
+            console.error('Error fetching document content for', doc.filePath, error);
+            return '';
+        } finally {
+            pendingTextRequests.delete(url);
+        }
+    })();
+
+    pendingTextRequests.set(url, promise);
+    return promise;
+}
+
 export async function getDocumentFrontmatter(doc: Document): Promise<any> {
     // Check cache first
-    // Use doc.url as key to share cache across projects since content is same
     if (frontmatterCache.has(doc.url)) {
         return frontmatterCache.get(doc.url);
     }
@@ -256,9 +287,7 @@ export async function getDocumentFrontmatter(doc: Document): Promise<any> {
 
     const promise = (async () => {
         try {
-            const response = await fetch(doc.url);
-            if (!response.ok) throw new Error('Failed to fetch document');
-            const text = await response.text();
+            const text = await getDocumentContent(doc);
             
             // Simple frontmatter parser
             const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -276,8 +305,7 @@ export async function getDocumentFrontmatter(doc: Document): Promise<any> {
             frontmatterCache.set(doc.url, frontmatter);
             return frontmatter;
         } catch (error) {
-            console.error('Error fetching frontmatter for', doc.filePath, error);
-            // Cache empty object to prevent retry loops on failure
+            console.error('Error parsing frontmatter for', doc.filePath, error);
             frontmatterCache.set(doc.url, {});
             return {};
         } finally {

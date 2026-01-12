@@ -131,7 +131,7 @@
 /* Infobox Styles */
 .infobox {
     float: right;
-    width: 330px;
+    width: 400px;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     margin-left: 2rem;
@@ -170,7 +170,7 @@
 /* Override metadataGrid styles when inside infobox */
 .infobox .metadataGrid {
     display: grid;
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: 120px 1fr;
     gap: 0;
     padding: 0;
     border: none;

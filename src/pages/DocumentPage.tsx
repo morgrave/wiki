@@ -36,6 +36,15 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
     d.filePath === actualDocPath
   );
 
+  const latestDoc = documents.find(d => 
+    d.project === projectId && 
+    d.version === 'latest' && 
+    d.filePath === actualDocPath
+  );
+
+  const heroImage = latestDoc?.thumbnail;
+  const showInfobox = !!heroImage;
+
   const [content, setContent] = React.useState<string>('');
   const [frontmatter, setFrontmatter] = React.useState<Record<string, any> | null>(null);
   const [loading, setLoading] = React.useState(false);
@@ -130,7 +139,8 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
 
       <h1 className={styles.title}>{currentDoc.title}</h1>
 
-      {frontmatter && Object.keys(frontmatter).length > 0 && (
+      {/* Render Metadata Grid at top ONLY if NOT showing infobox */}
+      {!showInfobox && frontmatter && Object.keys(frontmatter).length > 0 && (
         <div className={styles.metadataGrid}>
           {Object.entries(frontmatter).map(([key, value]) => {
             return (
@@ -159,6 +169,26 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
 
       {!loading && !error && (
         <div className={styles.markdown}>
+          {showInfobox && (
+            <aside className={styles.infobox}>
+              <div className={styles.infoboxHeader}>
+                 {frontmatter?.title || currentDoc.title}
+              </div>
+              <div className={styles.infoboxImageContainer}>
+                <img src={heroImage} alt={currentDoc.title} className={styles.infoboxImage} />
+              </div>
+              {frontmatter && Object.keys(frontmatter).length > 0 && (
+                <div className={styles.metadataGrid}>
+                  {Object.entries(frontmatter).map(([key, value]) => (
+                    <React.Fragment key={key}>
+                      <div className={styles.metaKey}>{key}</div>
+                      <div className={styles.metaValue}>{String(value)}</div>
+                    </React.Fragment>
+                  ))}
+                </div>
+              )}
+            </aside>
+          )}
           <ReactMarkdown 
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw]}

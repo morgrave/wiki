@@ -113,6 +113,12 @@
     background: var(--bg-tertiary);
 }
 
+.buttonsGroup {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
 .compareIcon {
     color: var(--text-secondary);
     pointer-events: none;
@@ -125,7 +131,9 @@
     font-size: 0.9rem;
     cursor: pointer;
     outline: none;
-    min-width: 120px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 /* Infobox Styles */

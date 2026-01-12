@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import { GitCompare, Loader2 } from 'lucide-react';
+import { GitCompare, History, Loader2 } from 'lucide-react';
 import type { Document } from '../types';
 import styles from './DocumentPage.module.css';
 
@@ -121,25 +121,47 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
     navigate(`/${projectId}/diff/${actualDocPath}?v1=${version}&v2=${otherVer}`);
   };
 
+  const handleViewVersion = (targetVer: string) => {
+    navigate(`/${projectId}/${actualDocPath}/${targetVer}`);
+  };
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.historyBar}>
         <div className={styles.versionBadge}>{version}</div>
         {otherVersions.length > 0 && (
-          <div className={styles.compareWrapper}>
-            <GitCompare size={16} className={styles.compareIcon} />
-            <select 
-              className={styles.compareSelect}
-              onChange={(e) => handleDiff(e.target.value)}
-              defaultValue=""
-            >
-              <option value="" disabled>이전 버전 비교</option>
-              {otherVersions.map(ov => (
-                <option key={ov.version} value={ov.version}>
-                  {ov.version}
-                </option>
-              ))}
-            </select>
+          <div className={styles.buttonsGroup}>
+            <div className={styles.compareWrapper}>
+              <History size={16} className={styles.compareIcon} />
+              <select 
+                key={`view-${version}`}
+                className={styles.compareSelect}
+                onChange={(e) => handleViewVersion(e.target.value)}
+                defaultValue=""
+              >
+                <option value="" disabled>과거 버전</option>
+                {otherVersions.map(ov => (
+                  <option key={ov.version} value={ov.version}>
+                    {ov.version}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={styles.compareWrapper}>
+              <GitCompare size={16} className={styles.compareIcon} />
+              <select 
+                className={styles.compareSelect}
+                onChange={(e) => handleDiff(e.target.value)}
+                defaultValue=""
+              >
+                <option value="" disabled>수정 내역</option>
+                {otherVersions.map(ov => (
+                  <option key={ov.version} value={ov.version}>
+                    {ov.version}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         )}
       </div>

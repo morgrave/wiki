@@ -127,9 +127,8 @@ async function writeKBFile(page, folderPath) {
 }
 
 async function writeLogFile(page, label, logContent) {
-  const updatePath = path.join(CAMPAIGNS_DIR, "update.txt");
-  const updateRaw = fs.readFileSync(updatePath, "utf-8");
-  const replacedUpdate = replacePlaceholders(updateRaw, label, logContent);
+  const updateText = fs.readFileSync(path.join(CAMPAIGNS_DIR, "update.txt"), "utf-8");
+  const replacedUpdate = replacePlaceholders(updateText, label, logContent);
 
   await writeTextarea(page, replacedUpdate);
   await runAndWait(page);
@@ -160,6 +159,24 @@ async function processMDList(page, baseFolder, label) {
     const copied = await clipboard.read();
     saveClipboardToPath(baseFolder, label, mdFile, copied);
   }
+}
+
+async function writeChangelog(page) {
+  const { default: clipboard } = await import("clipboardy");
+  const changelogPath = path.join(CAMPAIGNS_DIR, "changelog.txt");
+  const changelogText = fs.readFileSync(changelogPath, "utf-8");
+
+  const firstLine = changelogText.split(/\r?\n/)[0];
+
+  await writeTextarea(page, firstLine);
+  await runAndWait(page);
+  await page.waitForTimeout(500);
+  await clickOptionMenu(page, 3);
+
+  const copied = await clipboard.read();
+
+  const newContent = `${firstLine}\n\n${copied}`;
+  fs.writeFileSync(changelogPath, newContent);
 }
 
 async function copyLatestFiles(folderPath, label) {
@@ -265,6 +282,9 @@ async function main() {
 
   // 업데이트된 지식 베이스 파일 목록 추출 및 반영
   await processMDList(page, folderPath, label);
+
+  // changelog.txt 입력 및 갱신
+  await writeChangelog(page);
 
   // KB/latest 폴더에 복사
   // await copyLatestFiles(folderPath, label);

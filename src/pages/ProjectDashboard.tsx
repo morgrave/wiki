@@ -268,7 +268,13 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
                         to={`/${projectId}/${doc.filePath}/${currentVersion}`}
                         className={styles.docItem}
                       >
-                        <FileText size={16} className={styles.docIcon} />
+                        {doc.thumbnail ? (
+                          <div className={styles.docThumbnail}>
+                            <img src={doc.thumbnail} alt={doc.docName} />
+                          </div>
+                        ) : (
+                          <FileText size={16} className={styles.docIcon} />
+                        )}
                         <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                           <span className="truncate" title={doc.docName}>{doc.docName}</span>
                           {frontmatters[doc.id]?.title && (
@@ -315,7 +321,13 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
                         to={`/${projectId}/${doc.filePath}/${currentVersion}`}
                         className={styles.docItem}
                       >
-                        <FileText size={16} className={styles.docIcon} />
+                        {doc.thumbnail ? (
+                          <div className={styles.docThumbnail}>
+                            <img src={doc.thumbnail} alt={doc.docName} />
+                          </div>
+                        ) : (
+                          <FileText size={16} className={styles.docIcon} />
+                        )}
                         <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                           <span className="truncate" title={doc.docName}>{doc.docName}</span>
                           {frontmatters[doc.id]?.title && (

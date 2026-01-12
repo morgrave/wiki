@@ -7,6 +7,72 @@ import { naturalCompare } from '../utils/naturalSort';
 import { getDocumentFrontmatter } from '../utils/contentLoader';
 import styles from './ProjectDashboard.module.css';
 
+// 한글 초성 추출 함수
+const CHOSEONG = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+const HANGUL_START = 0xAC00;
+const HANGUL_END = 0xD7A3;
+
+const getInitialConsonant = (str: string): string => {
+  if (!str || str.length === 0) return '기타';
+  
+  const firstChar = str.charAt(0);
+  const code = firstChar.charCodeAt(0);
+  
+  // 한글 완성형 (가-힣)
+  if (code >= HANGUL_START && code <= HANGUL_END) {
+    const choseongIndex = Math.floor((code - HANGUL_START) / 588);
+    return CHOSEONG[choseongIndex];
+  }
+  
+  // 영문 대소문자
+  if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
+    return firstChar.toUpperCase();
+  }
+  
+  // 숫자
+  if (code >= 48 && code <= 57) {
+    return '0-9';
+  }
+  
+  return '기타';
+};
+
+// 초성 순서 정의 (한글 → 영문 → 숫자 → 기타)
+const getConsonantOrder = (consonant: string): number => {
+  const choseongIdx = CHOSEONG.indexOf(consonant);
+  if (choseongIdx !== -1) return choseongIdx;
+  
+  // 영문 A-Z (19 ~ 44)
+  if (consonant.length === 1 && consonant >= 'A' && consonant <= 'Z') {
+    return 19 + (consonant.charCodeAt(0) - 65);
+  }
+  
+  // 숫자 (45)
+  if (consonant === '0-9') return 45;
+  
+  // 기타 (46)
+  return 46;
+};
+
+// 문서 배열을 초성별로 그룹화하는 함수
+const groupByInitialConsonant = (docs: Document[]): { consonant: string; docs: Document[] }[] => {
+  const grouped: Record<string, Document[]> = {};
+  
+  docs.forEach(doc => {
+    const consonant = getInitialConsonant(doc.docName);
+    if (!grouped[consonant]) grouped[consonant] = [];
+    grouped[consonant].push(doc);
+  });
+  
+  // 초성 순서대로 정렬
+  const sortedKeys = Object.keys(grouped).sort((a, b) => getConsonantOrder(a) - getConsonantOrder(b));
+  
+  return sortedKeys.map(consonant => ({
+    consonant,
+    docs: grouped[consonant].sort((a, b) => naturalCompare(a.docName, b.docName))
+  }));
+};
+
 interface ProjectDashboardProps {
   projects: Project[];
   documents: Document[];
@@ -190,23 +256,31 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
             <span className={styles.badge}>{groups.rootDocs.length}</span>
           </div>
           {!collapsedSections.has('general') && (
-            <div className={styles.docList}>
-              {groups.rootDocs.map(doc => (
-                <Link 
-                  key={doc.id} 
-                  to={`/${projectId}/${doc.filePath}/${currentVersion}`}
-                  className={styles.docItem}
-                >
-                  <FileText size={16} className={styles.docIcon} />
-                  <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                    <span className="truncate" title={doc.docName}>{doc.docName}</span>
-                    {frontmatters[doc.id]?.title && (
-                      <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={frontmatters[doc.id].title}>
-                        {frontmatters[doc.id].title}
-                      </span>
-                    )}
+            <div className={styles.docListContainer}>
+              {groupByInitialConsonant(groups.rootDocs).map((group, groupIndex) => (
+                <React.Fragment key={group.consonant}>
+                  {groupIndex > 0 && <div className={styles.groupDivider}><span className={styles.dividerLabel}>{group.consonant}</span></div>}
+                  {groupIndex === 0 && <div className={styles.groupHeader}><span className={styles.dividerLabel}>{group.consonant}</span></div>}
+                  <div className={styles.docList}>
+                    {group.docs.map(doc => (
+                      <Link 
+                        key={doc.id} 
+                        to={`/${projectId}/${doc.filePath}/${currentVersion}`}
+                        className={styles.docItem}
+                      >
+                        <FileText size={16} className={styles.docIcon} />
+                        <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                          <span className="truncate" title={doc.docName}>{doc.docName}</span>
+                          {frontmatters[doc.id]?.title && (
+                            <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={frontmatters[doc.id].title}>
+                              {frontmatters[doc.id].title}
+                            </span>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
                   </div>
-                </Link>
+                </React.Fragment>
               ))}
             </div>
           )}
@@ -229,23 +303,31 @@ const ProjectDashboard: React.FC<ProjectDashboardProps> = ({ projects, documents
             <span className={styles.badge}>{groups.grouped[category].length}</span>
           </div>
           {!collapsedSections.has(category) && (
-            <div className={styles.docList}>
-              {groups.grouped[category].map(doc => (
-                <Link 
-                  key={doc.id} 
-                  to={`/${projectId}/${doc.filePath}/${currentVersion}`}
-                  className={styles.docItem}
-                >
-                  <FileText size={16} className={styles.docIcon} />
-                  <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                    <span className="truncate" title={doc.docName}>{doc.docName}</span>
-                    {frontmatters[doc.id]?.title && (
-                      <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={frontmatters[doc.id].title}>
-                        {frontmatters[doc.id].title}
-                      </span>
-                    )}
+            <div className={styles.docListContainer}>
+              {groupByInitialConsonant(groups.grouped[category]).map((group, groupIndex) => (
+                <React.Fragment key={group.consonant}>
+                  {groupIndex > 0 && <div className={styles.groupDivider}><span className={styles.dividerLabel}>{group.consonant}</span></div>}
+                  {groupIndex === 0 && <div className={styles.groupHeader}><span className={styles.dividerLabel}>{group.consonant}</span></div>}
+                  <div className={styles.docList}>
+                    {group.docs.map(doc => (
+                      <Link 
+                        key={doc.id} 
+                        to={`/${projectId}/${doc.filePath}/${currentVersion}`}
+                        className={styles.docItem}
+                      >
+                        <FileText size={16} className={styles.docIcon} />
+                        <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                          <span className="truncate" title={doc.docName}>{doc.docName}</span>
+                          {frontmatters[doc.id]?.title && (
+                            <span className="truncate" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }} title={frontmatters[doc.id].title}>
+                              {frontmatters[doc.id].title}
+                            </span>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
                   </div>
-                </Link>
+                </React.Fragment>
               ))}
             </div>
           )}

@@ -8,6 +8,8 @@ import { GitCompare, Loader2 } from 'lucide-react';
 import type { Document } from '../types';
 import styles from './DocumentPage.module.css';
 
+import { naturalCompare } from '../utils/naturalSort';
+
 interface DocumentPageProps {
   documents: Document[];
 }
@@ -78,11 +80,15 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
     }
   }, [currentDoc]);
 
-  const otherVersions = documents.filter(d => 
-    d.project === projectId && 
-    d.filePath === actualDocPath && 
-    d.version !== version
-  );
+  const otherVersions = React.useMemo(() => {
+    return documents
+      .filter(d => 
+        d.project === projectId && 
+        d.filePath === actualDocPath && 
+        d.version !== version
+      )
+      .sort((a, b) => naturalCompare(a.version, b.version));
+  }, [documents, projectId, actualDocPath, version]);
 
   if (!currentDoc) {
     return (
@@ -104,18 +110,20 @@ const DocumentPage: React.FC<DocumentPageProps> = ({ documents }) => {
       <div className={styles.historyBar}>
         <div className={styles.versionBadge}>{version}</div>
         {otherVersions.length > 0 && (
-          <div style={{ display: 'flex', gap: '8px' }}>
-            {otherVersions.map(ov => (
-              <button 
-                key={ov.version} 
-                className={styles.compareButton}
-                onClick={() => handleDiff(ov.version)}
-                title={`Compare with version ${ov.version}`}
-              >
-                <GitCompare size={14} />
-                <span>Diff {ov.version}</span>
-              </button>
-            ))}
+          <div className={styles.compareWrapper}>
+            <GitCompare size={16} className={styles.compareIcon} />
+            <select 
+              className={styles.compareSelect}
+              onChange={(e) => handleDiff(e.target.value)}
+              defaultValue=""
+            >
+              <option value="" disabled>이전 버전 비교</option>
+              {otherVersions.map(ov => (
+                <option key={ov.version} value={ov.version}>
+                  {ov.version}
+                </option>
+              ))}
+            </select>
           </div>
         )}
       </div>

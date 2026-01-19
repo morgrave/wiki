@@ -218,9 +218,9 @@ async function main() {
   const pages = browser.pages();
   const page = pages.length > 0 ? pages[0] : await browser.newPage();
   // 패스파인더
-   await page.goto(
-     "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
-   );
+  //  await page.goto(
+  //    "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
+  //  );
   // 시트론 1
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/17T-ly8tPyFqyKY9ZASsvQ6FL3sOUfLsa",
@@ -229,39 +229,39 @@ async function main() {
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1JAU4fxM4WeuR3-6YNx6dYquzAYnajQze",
   // );
-  // 듀얼단
-  // await page.goto(
-  //   "https://aistudio.google.com/u/1/prompts/1A8cN9pED4TdlWozYfjfQFBi4_YMwRCwb"
-  // );
-  // 듀얼단 2
+  // 페리아
+  await page.goto(
+    "https://aistudio.google.com/u/1/prompts/1A8cN9pED4TdlWozYfjfQFBi4_YMwRCwb"
+  );
+  // 페리아 2
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1-T1Rv1SMl0TjQBG7t7L_3aWEnb1RS170"
   // );
-  // 듀얼단 3 (arm1)
+  // 페리아 3 (arm1)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"
   // );
-  // 듀얼단 4 (arm2)
+  // 페리아 4 (arm2)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1yq4-iaEh0LIHNm-RH35s8Cn5f-qj-CMa"
   // );
-  // 듀얼단 5 (arm3)
+  // 페리아 5 (arm3)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1l3sAth_WmfbEWIv3ei17B0IDGNmJjWzK"
   // );
-  // 듀얼단 6 (arm5)
+  // 페리아 6 (arm5)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/18cXzpP80m6cwSq-GcsnfK0zyApbRXRcM"
   // );
-  // 듀얼단 7 (korea)
+  // 페리아 7 (korea)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1vkHW882mtbEfjIdpK42Jg_LOUiZVvTOR"
   // );
-  // 듀얼단 8 (arm6)
+  // 페리아 8 (arm6)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1fbB38xzGoF8ylmS2o_M23S5cxUld-gQY"
   // );
-  // 듀얼단 9 (arm7)
+  // 페리아 9 (arm7)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1O8zK5oNh79tEh9wE3ILt2yWrGM33gbcn"
   // );

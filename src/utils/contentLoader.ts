@@ -226,6 +226,37 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
     
     // Then add own documents (highest priority, overrides dependencies)
     for (const ownDoc of projectDocs) {
+      // If thumbnail is missing, try to resolve from dependencies
+      if (!ownDoc.thumbnail) {
+        // Iterate dependencies in reverse order (high priority first)
+        for (let i = dependencies.length - 1; i >= 0; i--) {
+          const depId = dependencies[i];
+          
+          // Helper to check and set thumbnail
+          const tryResolveImage = (versionToCheck: string) => {
+            // Note: validImageExtensions keys are already lowercased and normalized
+            // We need to construct the key matching how it was created
+            const depKey = `../../campaigns/${depId}/KB/${versionToCheck}/${ownDoc.filePath}`.toLowerCase();
+            if (validImageExtensions.has(depKey)) {
+              const imgPath = validImageExtensions.get(depKey)!;
+              const imgParts = imgPath.split('/');
+              const imgExpIndex = imgParts.indexOf('campaigns');
+              if (imgExpIndex !== -1) {
+                const relativeImgPath = imgParts.slice(imgExpIndex + 1).map(encodeURIComponent).join('/');
+                ownDoc.thumbnail = `${baseUrl}campaigns/${relativeImgPath}`;
+                return true;
+              }
+            }
+            return false;
+          };
+
+          // Try exact version first
+          if (tryResolveImage(ownDoc.version)) break;
+          // Try 'latest' fallback
+          if (ownDoc.version !== 'latest' && tryResolveImage('latest')) break;
+        }
+      }
+
       const key = `${ownDoc.version}:${ownDoc.filePath}`;
       
       docMap.set(key, ownDoc); // Own docs don't have sourceProject

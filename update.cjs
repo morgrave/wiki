@@ -76,7 +76,7 @@ async function waitForEnter() {
       output: process.stdout,
     });
 
-    rl.question("⚠️ 에러 감지됨. Enter 키를 누르면 계속합니다...", () => {
+    rl.question("⚠️ Enter 키를 누르면 계속합니다...", () => {
       rl.close();
       resolve();
     });
@@ -209,7 +209,7 @@ async function main() {
   console.log(`🏷️ 라벨: ${label}`);
 
   // 구글 AI 스튜디오 접속
-  const browser = await chromium.launchPersistentContext("./user_data/9", {
+  const browser = await chromium.launchPersistentContext("./user_data/1", {
     headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
     viewport: { width: 2560, height: 1080 },
@@ -218,9 +218,9 @@ async function main() {
   const pages = browser.pages();
   const page = pages.length > 0 ? pages[0] : await browser.newPage();
   // 패스파인더
-  //  await page.goto(
-  //    "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
-  //  );
+   await page.goto(
+     "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
+   );
   // 시트론 1
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/17T-ly8tPyFqyKY9ZASsvQ6FL3sOUfLsa",
@@ -262,9 +262,9 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1fbB38xzGoF8ylmS2o_M23S5cxUld-gQY"
   // );
   // 페리아 9 (arm7)
-  await page.goto(
-    "https://aistudio.google.com/u/1/prompts/1O8zK5oNh79tEh9wE3ILt2yWrGM33gbcn"
-  );
+  // await page.goto(
+  //   "https://aistudio.google.com/u/1/prompts/1O8zK5oNh79tEh9wE3ILt2yWrGM33gbcn"
+  // );
   await page.waitForSelector("textarea", { timeout: 60000 });
 
   if (label === "") {
@@ -291,6 +291,8 @@ async function main() {
 
   await browser.close();
   console.log("\n✨ 지식 베이스 작업 완료!");
+
+  await waitForEnter();
 }
 
 main().catch(console.error);

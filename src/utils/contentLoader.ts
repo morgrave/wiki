@@ -12,7 +12,7 @@ interface ProjectIndex {
 // We use 'query: ?url' to ensure Vite treats them as assets if imported,
 // but we mostly care about the KEYS (file paths).
 const modules = import.meta.glob(['../../campaigns/**/*.md', '../../campaigns/**/KB.txt'], { query: '?url', import: 'default' });
-const imageModules = import.meta.glob(['../../campaigns/**/*.{png,jpg,jpeg,bmp,gif}']);
+const imageModules = import.meta.glob(['../../campaigns/**/*.{png,jpg,jpeg,bmp,gif,webp}']);
 
 // Cache for document frontmatter
 const frontmatterCache = new Map<string, any>();

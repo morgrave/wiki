@@ -1,69 +1,27 @@
 기존 캐릭터 파일들 중 업데이트된 파일의 내용 중 새로 추가되거나 변경된 부분만을 전부 출력해줘.
 
-**characters/벨.md**
-*   **공룡 변신:** 델포이 신전 숲에서 **'밀림의 왕'**과 맞서기 위해 **'잃어버린 원시 뼈 장신구'**를 사용하여 **6x6 사이즈의 거대 공룡**으로 변신했다.
-*   **지능 상승:** 공룡 변신의 무작위 효과로 **[두뇌 성장]**이 발동하여 지능과 지혜가 16(+3)으로 비약적으로 상승, **'현자 공룡'**이 되었다.
-*   **괴수 대전:** 거대화한 몸으로 밀림의 왕과 정면으로 주먹을 맞교환하며 괴수 대전을 벌였고, **<액션 서지>**와 **<정밀 공격>**을 쏟아부어 적을 몰아붙였다.
-*   **피의 결속:** 빈센트의 혈마법 의식에 동의하여 자신의 체력을 10% 희생하고 파티원들과 생명력을 공유하는 유대를 맺었다.
+**Isolating New Content**
 
-**characters/빈센트.md**
-*   **피의 결속 의식:** 델포이 신전 숲에서 동료들에게 제안하여 **<피의 결속>** 의식을 거행했다. 파티원 전원의 체력을 10%씩 소모하여 생명력을 공유하고 내성/명중 굴림을 보정할 수 있게 했다.
-*   **전투 활약:** **<녹색 불꽃의 칼날>**로 주변의 식물 괴수들을 처치하며 그 화염 피해를 **'밀림의 왕'**에게 전이시켰고, **<하다르의 팔>**로 밀림의 왕을 공격했다.
+I'm zeroing in on the core request: pinpointing *only* the new or modified content within character files after an update. My primary task is to identify the crucial elements for a proper response. I need to understand what constitutes "new" or "changed" in this context.
 
-**characters/라르비온.md**
-*   **가지치기:** 숲속에서 만난 식물 괴수들을 상대로 쌍검을 휘두르며 "가지치기를 하겠다"고 맹활약했다.
-*   **폭발적인 화력:** 거대해진 **벨**이 밀림의 왕과 싸울 때, 적의 측면을 파고들어 **<날뛰는 쾌검>**과 **<깊은 상처>**를 연계하여 **111 데미지**라는 폭발적인 화력을 퍼부어 승리에 기여했다.
-*   **피의 결속:** 빈센트의 혈마법 의식에 동의하여 체력을 공유했다.
 
-**characters/블라트나트.md**
-*   **짐승의 교화:** 숲속에서 난입한 **개추**에게 "손" 훈련을 시켜 길들이고, **알비노 사우르스**를 조곤조곤 달래어(동물 조련) 교화시켜 숲으로 돌려보냈다.
-*   **모이라 할멈과의 재회:** 모이라 할멈이 치매 증세로 자신을 못 알아보고 엉뚱한 소리를 하자 안타까워하면서도 장단을 맞춰주었다.
-*   **운명 개척:** **블라트시아**로부터 예언의 진실(세상의 흐름)을 듣고, **"운명을 바꾸자"**는 제안에 동의했다.
-*   **전투 지원:** **<섬광 이동>**으로 전장을 누비며 정보를 분석하고, **<방비의 유대>**로 빈센트를 보호하며 아군을 지원했다.
+**Analyzing Character Updates**
 
-**characters/밀림의_왕.md**
-*   **등장 및 지휘:** 델포이 신전 숲 창고 앞에서 수많은 공룡 무리를 이끌고 나타나 "자연을 퍼뜨리겠다"며 지휘관처럼 명령을 내렸다.
-*   **괴수 대전:** 거대 공룡으로 변신한 **벨**과 정면으로 충돌하여 주먹을 맞교환했다.
-*   **전투 능력:** **<육중한 충격파>**로 조사대를 넘어뜨리려 하고, **<날아드는 꽃>**으로 원거리 공격을 가했으며, 패시브 **<구속하는 덩굴>**로 조사대의 발을 묶었다.
-*   **자연의 가호:** 체력이 바닥나자 방어도를 20으로 고정하고 **80의 임시 체력**을 얻는 방어 기술을 사용하여 회복을 시도했다.
+I'm now diving into specific character files from Episode 52. For "밀림의_왕.md," I see a new event: its defeat in the Delphi Temple forest. The combat details are clear: it used a shield against Bell, and was ultimately defeated by Larbion. The death and its impact are also noted: it was burned, leaving a will, and causing the withering of plants. Finally, its actions per round and specific stats are updated. I will now process the other target files in a similar fashion.
 
-**characters/개추.md**
-*   **교화:** 블라트나트의 "손" 명령에 따라 손을 올리고 길들여져 아군이 되었다.
-*   **거대화 (진화):** **'밀림의 왕'**의 힘(혹은 공명)을 받아 덩치가 커지고 전투력이 상승했다.
-*   **활약:** 아군이 된 후 식물 공룡을 앞발로 짓밟아 처치하는 활약을 했다.
-*   **김장 소동:** 모이라 할멈에게 "질 좋은 고춧가루"로 오해받아 라르비온에게 비벼지는 수난을 겪었다.
 
-**characters/모이라.md**
-*   **치매 증상:** 숲 속 창고에서 재회했을 때, **벨**을 **"철수"**, **빈센트**를 **"영호"**라고 부르며 자신들이 **'백반집'**을 운영하고 있다고 착각했다.
-*   **김장 기행:** **개추**를 고춧가루로 착각해 라르비온에게 비비는 행동을 했다.
-*   **하르의 위치 제보:** 갑자기 정신이 돌아온 듯 진지한 표정으로 **블라트하르**가 **"남쪽 길 깊숙한 곳에 있는 버려진 신전"**에 있다고 알려주었다.
+**Identifying Key File Changes**
 
-**characters/블라트시아.md**
-*   **비밀기지 회상:** 숲 속 창고가 과거 자매들의 비밀 놀이터였음을 회상했다.
-*   **예언의 진실:** 델포이 신전의 예언은 신이 내리는 것이 아니라 **"세상의 흐름"**을 읽는 능력이라고 밝혔다. 신조차 예언에 휘둘릴 수 있지만, 예언을 거부하는 것 또한 흐름일 수 있다며 **"운명을 바꾸자"**고 제안했다.
+I've examined additional character updates. For 벨.md, I registered a pivotal event: Bell's dinosaur transformation in pursuit of the Jungle King, along with combat details and riddle solutions, including the new 'Living Nature Robe.' Лаpбион.md displays his decisive blow against the Jungle King, exploration of the Abandoned Temple, and a new 'Mysterious Carpet'. I continue pinpointing the changes.
 
-**characters/뎅주응.md**
-*   **통찰:** 숲 속 창고에서 모이라 할멈이 사실은 자매들의 일탈을 다 알고 묵인해주었을 것이라며, "거울에 빛을 비추면 반사되듯" 할멈의 사랑을 설명했다.
-*   **인공 태양:** 비유를 들 때 머리가 너무 번쩍여서 '인공 태양' 취급을 받으며 식물들의 광합성을 돕는다는 놀림을 받았다.
 
-**characters/네리샤.md**
-*   **상황 수습:** 기절한 아테나이오스를 쿨하게 내버려 두고, 상태가 좋지 않은 **모이라 할멈**을 안전한 곳으로 데려다주겠다고 자청했다.
-*   **길 안내:** 조사대에게 블라트하르가 있는 남쪽 길을 안내해 주었다.
+**Pinpointing Recent Updates**
 
-**characters/아테나이오스.md**
-*   **기절 및 자책:** 괴수에게 덤비다 일격에 기절해 실려 나갔다. 깨어난 후 신전을 지키지 못했다며 자책했다.
+I've zeroed in on the latest updates. In `빈센트.md`, I see Vincent using "Green Flame Blade," performing a "Blood Bond" ritual, and solving a puzzle involving a number pattern. I also tracked him countering Haru's charm, using "Counterspell," and mocking Haru. For `블라트나트.md`, I note the use of "Warding Bond" and "Cruel" in combat, taming new creatures, receiving a revelation, returning the 'Genesis Disk,' receiving the party's 'Long Rest' blessing, and encountering the transformed.
 
-**characters/쇼르트아.md**
-*   **길 개척:** 숲 속 창고 입구가 식물 줄기로 막혀 있자, 불꽃 주문을 사용하여 길을 열었다. 빈센트에게 "불장난(담배)"하냐는 놀림을 받았다.
 
-**characters/식물공룡.md** (신규/업데이트)
-*   **상세 정보:** 공룡과 식물의 혼종 몬스터. 동료가 쓰러지면 남은 개체가 **진화**하여 강해지는 특성이 있다. 조사대와 개추의 활약으로 전멸했다.
+**Tracking Character Actions**
 
-**characters/알비노사우르스.md** (신규/업데이트)
-*   **상세 정보:** 엑스페리온의 희귀 토착종 공룡. 싸움에 우연히 휘말려 난입했으나, **블라트나트**의 조련에 감화되어 얌전히 숲으로 돌아갔다.
+I've registered Haru's attempt at persuasion and a humorous revelation about Nat's savings being used for clothes. Haru cleared void darkness with "Dawn's Light" in combat. For `개추.md`, I've documented its return to normal size, "Flower-Chu" nickname, and following the party. I've also tracked Blatnat's mutations and terror, her summoning of elemental towers, and confession about the savings.
 
-**characters/퍼지는_자연.md** (신규/업데이트)
-*   **상세 정보:** 식물 공룡의 다른 이름 혹은 변종. 포자를 뿌리거나 부식액을 발사하는 등 다양한 공격을 했으나 라르비온에게 정리되었다.
 
-**characters/녹색_괴인.md** (신규/업데이트)
-*   **상세 정보:** 식물 공룡 무리의 우두머리격 개체. 벨에게 **<흡수의 줄기>**를 꽂아 저항하고 **<광합성>**으로 버텼으나, 조사대의 집중 공격에 소멸했다.

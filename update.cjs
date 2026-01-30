@@ -262,9 +262,10 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1fbB38xzGoF8ylmS2o_M23S5cxUld-gQY"
   // );
   // 페리아 9 (arm7)
-  await page.goto(
-    "https://aistudio.google.com/u/1/prompts/1O8zK5oNh79tEh9wE3ILt2yWrGM33gbcn"
-  );
+  // await page.goto(
+  //   "https://aistudio.google.com/u/1/prompts/1O8zK5oNh79tEh9wE3ILt2yWrGM33gbcn"
+  // );
+
   await page.waitForSelector("textarea", { timeout: 60000 });
 
   if (label === "") {

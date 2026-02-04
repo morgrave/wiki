@@ -107,10 +107,10 @@ async function main() {
 
     console.log(`💾 저장 완료: ${filePath}`);
 
-    // 파일 후처리: 맨 위 2줄 제거, 그리고 'avatar' 한 글자 줄 제거
+    // 파일 후처리: 맨 위 4줄 제거, 그리고 'avatar' 한 글자 줄 제거
     const raw = await fs.readFile(filePath, "utf8");
     const lines = raw.split(/\r?\n/);
-    const afterDropFirst2 = lines.slice(2); // 맨 위 2줄 제거
+    const afterDropFirst2 = lines.slice(4); // 맨 위 4줄 제거
     const filteredLines = afterDropFirst2.filter(
       (line) => line.trim() !== "avatar",
     );

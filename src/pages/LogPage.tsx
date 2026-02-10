@@ -1,6 +1,7 @@
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import clsx from 'clsx';
 import { Copy, Check, FileText, ChevronRight, ChevronDown, CheckSquare, Square, Filter } from 'lucide-react';
 import styles from './LogPage.module.css';
 
@@ -73,6 +74,10 @@ const LogPage: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // For scrolling to expanded item
+  const [lastExpanded, setLastExpanded] = useState<string | null>(null);
+  const fileRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value;
     setCharacterName(newName);
@@ -102,18 +107,43 @@ const LogPage: React.FC = () => {
 
   // Toggle expand/collapse
   const toggleExpand = (file: LogFile) => {
+    if (!expandedFiles.has(file.path)) {
+      setLastExpanded(file.path);
+      fetchFileContent(file);
+    } else {
+      // Closing: if this is the last open file, scroll to top
+      if (expandedFiles.size === 1) {
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'auto' }), 100);
+      }
+    }
+    
     setExpandedFiles(prev => {
       const next = new Set(prev);
       if (next.has(file.path)) {
         next.delete(file.path);
       } else {
         next.add(file.path);
-        // Fetch content when expanding
-        fetchFileContent(file);
       }
       return next;
     });
   };
+
+  // Effect to scroll to expanded item
+  useEffect(() => {
+    if (lastExpanded && expandedFiles.has(lastExpanded)) {
+      // Small timeout to allow layout transition (max-height removal) to happen
+      setTimeout(() => {
+        const el = fileRefs.current.get(lastExpanded);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          const scrollTop = window.scrollY || document.documentElement.scrollTop;
+          // scroll slightly above the element to show the title clearly
+          window.scrollTo({ top: rect.top + scrollTop - 120, behavior: 'auto' });
+        }
+      }, 100);
+      setLastExpanded(null);
+    }
+  }, [expandedFiles, lastExpanded]);
 
   // Toggle checkbox
   const toggleCheck = (file: LogFile, e: React.MouseEvent) => {
@@ -272,7 +302,7 @@ const LogPage: React.FC = () => {
         <div className={styles.fileListHeader}>
           <h2 className={styles.fileListTitle}>Log Files ({logFiles.length})</h2>
           <button className={styles.selectAllButton} onClick={toggleSelectAll}>
-            {checkedFiles.size === logFiles.length ? <CheckSquare size={14} /> : <Square size={14} />}
+            {checkedFiles.size === logFiles.length ? <CheckSquare size={18} /> : <Square size={18} />}
             {checkedFiles.size === logFiles.length ? 'Deselect All' : 'Select All'}
           </button>
         </div>
@@ -280,7 +310,7 @@ const LogPage: React.FC = () => {
         {logFiles.length === 0 ? (
           <div className={styles.emptyState}>No log files found for this project.</div>
         ) : (
-          <div className={styles.fileList}>
+          <div className={clsx(styles.fileList, expandedFiles.size > 0 && styles.fileListExpanded)}>
             {logFiles.map(file => {
               const isExpanded = expandedFiles.has(file.path);
               const isChecked = checkedFiles.has(file.path);
@@ -288,7 +318,14 @@ const LogPage: React.FC = () => {
               const content = fileContents.get(file.path);
 
               return (
-                <div key={file.path} className={styles.fileItem}>
+                <div 
+                  key={file.path} 
+                  className={styles.fileItem}
+                  ref={(el) => {
+                    if (el) fileRefs.current.set(file.path, el);
+                    else fileRefs.current.delete(file.path);
+                  }}
+                >
                   <div
                     className={styles.fileItemHeader}
                     onClick={() => toggleExpand(file)}
@@ -312,7 +349,7 @@ const LogPage: React.FC = () => {
                         <span style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>Loading...</span>
                       ) : content ? (
                         <pre className={styles.fileContentText}>
-                          {content.length > 5000 ? content.substring(0, 5000) + '\n... (truncated)' : content}
+                          {content}
                         </pre>
                       ) : (
                         <span style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>Failed to load content.</span>

@@ -137,21 +137,19 @@
 .selectAllButton {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
-    background: none;
+    gap: var(--spacing-sm);
+    background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    padding: 0.3rem 0.8rem;
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
     border-radius: var(--radius-md);
     cursor: pointer;
-    font-size: 0.8rem;
     font-weight: 500;
     transition: all 0.2s;
 }
 
 .selectAllButton:hover {
     background-color: var(--bg-tertiary);
-    color: var(--text-primary);
     border-color: var(--accent-color);
 }
 
@@ -165,6 +163,12 @@
     padding: var(--spacing-sm);
     max-height: 500px;
     overflow-y: auto;
+    transition: max-height 0.3s ease;
+}
+
+.fileListExpanded {
+    max-height: none;
+    overflow-y: visible;
 }
 
 .fileItem {
@@ -213,8 +217,6 @@
     padding: 0.5rem 0.75rem 0.75rem 2.5rem;
     background-color: var(--bg-primary);
     border-top: 1px solid var(--border-color);
-    max-height: 300px;
-    overflow-y: auto;
 }
 
 .fileContentText {

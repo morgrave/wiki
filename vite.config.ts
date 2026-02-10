@@ -15,7 +15,14 @@ const serveStaticFiles = (): Plugin => ({
       if (req.url.startsWith('/campaigns')) {
         const filePath = path.join(process.cwd(), 'campaigns', req.url.replace('/campaigns', ''));
         if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-          res.setHeader('Content-Type', 'text/markdown');
+          const ext = path.extname(filePath).toLowerCase();
+          const contentTypeMap: Record<string, string> = {
+            '.md': 'text/markdown; charset=utf-8',
+            '.html': 'text/html; charset=utf-8',
+            '.txt': 'text/plain; charset=utf-8',
+            '.json': 'application/json; charset=utf-8',
+          };
+          res.setHeader('Content-Type', contentTypeMap[ext] || 'text/plain; charset=utf-8');
           const stream = fs.createReadStream(filePath);
           stream.pipe(res);
           return;

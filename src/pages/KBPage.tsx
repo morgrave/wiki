@@ -54,7 +54,7 @@ const KBPage: React.FC<KBPageProps> = ({ projects }) => {
     <div className={styles.container}>
       <header className={styles.header}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <FileText size={28} className="text-blue-500" />
+          <FileText size={28} />
           <h1 className={styles.title}>Knowledge Base Source</h1>
         </div>
         

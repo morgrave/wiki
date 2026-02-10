@@ -185,6 +185,22 @@ const Sidebar: React.FC<SidebarProps> = ({ projects, documents, isOpen = true, o
           </div>
 
           <div className={styles.section} style={{ paddingTop: 0 }}>
+            <label className={styles.sectionTitle}>WORKSPACE</label>
+            <div>
+               <NavLink
+                 to={`/${projectId}/log`}
+                 className={({ isActive }) => clsx(
+                   styles.fileLink,
+                   isActive && styles.fileActive
+                 )}
+               >
+                 <FileText size={14} />
+                 <span>LOG</span>
+               </NavLink>
+            </div>
+          </div>
+
+          <div className={styles.section} style={{ paddingTop: 0 }}>
              <label className={styles.sectionTitle}>DOCUMENTS</label>
              <div>
                {Object.values(tree).map(node => (

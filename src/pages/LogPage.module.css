@@ -1,0 +1,312 @@
+.container {
+    padding: var(--spacing-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.copyButton {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.copyButton:hover {
+    background-color: var(--bg-tertiary);
+    border-color: var(--accent-color);
+}
+
+/* Controls area: regex input + extract button */
+.controls {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.nameInput {
+    width: 150px;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: border-color 0.2s;
+}
+
+.nameInput:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(51, 102, 204, 0.15);
+}
+
+.regexInput {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: border-color 0.2s;
+}
+
+.regexInput:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(51, 102, 204, 0.15);
+}
+
+.extractButton {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background-color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.extractButton:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+.extractButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* File list section */
+.fileListSection {
+    margin-bottom: var(--spacing-lg);
+}
+
+.fileListHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+}
+
+.fileListTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.selectAllButton {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.selectAllButton:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--accent-color);
+}
+
+.fileList {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-sm);
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.fileItem {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: background-color 0.15s;
+    flex-shrink: 0;
+}
+
+.fileItemHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    user-select: none;
+}
+
+.fileItemHeader:hover {
+    background-color: var(--bg-tertiary);
+}
+
+.fileCheckbox {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent-color);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.fileName {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    flex: 1;
+}
+
+.expandIcon {
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    transition: transform 0.2s;
+}
+
+.fileContent {
+    padding: 0.5rem 0.75rem 0.75rem 2.5rem;
+    background-color: var(--bg-primary);
+    border-top: 1px solid var(--border-color);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.fileContentText {
+    margin: 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    color: var(--text-secondary);
+}
+
+/* Result section */
+.resultSection {
+    margin-top: var(--spacing-lg);
+}
+
+.resultHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.resultTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.resultCount {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.contentWrapper {
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-lg);
+    overflow-x: auto;
+}
+
+.content {
+    margin: 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    color: var(--text-primary);
+}
+
+.error {
+    color: #ef4444;
+    padding: 2rem;
+    text-align: center;
+    background-color: #fef2f2;
+    border-radius: var(--radius-md);
+    border: 1px solid #fecaca;
+}
+
+.loading {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.emptyState {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .regexInput,
+    .nameInput {
+        min-width: unset;
+        width: 100%;
+    }
+}

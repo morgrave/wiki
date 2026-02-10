@@ -7,6 +7,7 @@ import DiffPage from './pages/DiffPage';
 import Home from './pages/Home';
 import ProjectDashboard from './pages/ProjectDashboard';
 import KBPage from './pages/KBPage';
+import LogPage from './pages/LogPage';
 import SearchPage from './pages/SearchPage';
 import { loadContent } from './utils/contentLoader';
 import type { ContentData } from './types';
@@ -32,6 +33,7 @@ function App() {
            
 
             <Route path="KB" element={<KBPage projects={data.projects} />} />
+            <Route path="log" element={<LogPage />} />
             <Route path="search" element={<SearchPage documents={data.documents} />} />
             <Route path="diff/*" element={<DiffPage documents={data.documents} />} />
             {/* Catch-all for docPath, then version at the end. 

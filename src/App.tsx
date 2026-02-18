@@ -32,7 +32,7 @@ function App() {
            <Route index element={<ProjectDashboard projects={data.projects} documents={data.documents} />} />
            
 
-            <Route path="txt/:fileName" element={<TextFilePage projects={data.projects} />} />
+            <Route path="prompt/:fileName" element={<TextFilePage projects={data.projects} />} />
             <Route path="log" element={<LogPage />} />
             <Route path="search" element={<SearchPage documents={data.documents} />} />
             <Route path="diff/*" element={<DiffPage documents={data.documents} />} />

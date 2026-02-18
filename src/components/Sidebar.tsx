@@ -174,7 +174,7 @@ const Sidebar: React.FC<SidebarProps> = ({ projects, documents, isOpen = true, o
               {projects.find(p => p.id === projectId)?.txtFiles.map(file => (
                <NavLink
                  key={file.name}
-                 to={`/${projectId}/txt/${encodeURIComponent(file.name)}`}
+                 to={`/${projectId}/prompt/${encodeURIComponent(file.name)}`}
                  className={({ isActive }) => clsx(
                    styles.fileLink,
                    isActive && styles.fileActive

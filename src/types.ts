@@ -20,7 +20,7 @@ export interface Document {
 export interface Project {
   id: string;
   name: string;
-  kbUrl?: string;
+  txtFiles: { name: string; url: string }[];
   players?: string[]; // List of hero/player names
 }
 

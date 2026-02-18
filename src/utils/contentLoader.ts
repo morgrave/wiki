@@ -11,7 +11,7 @@ interface ProjectIndex {
 // Use Vite's glob import to find files. 
 // We use 'query: ?url' to ensure Vite treats them as assets if imported,
 // but we mostly care about the KEYS (file paths).
-const modules = import.meta.glob(['../../campaigns/**/*.md', '../../campaigns/**/KB.txt'], { query: '?url', import: 'default' });
+const modules = import.meta.glob(['../../campaigns/**/*.md', '../../campaigns/**/*.txt'], { query: '?url', import: 'default' });
 const imageModules = import.meta.glob(['../../campaigns/**/*.{png,jpg,jpeg,bmp,gif,webp}']);
 
 // Cache for document frontmatter
@@ -43,8 +43,8 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
     validImageExtensions.set(key, path);
   }
 
-  // Store project info including kbUrl
-  const projectsMap = new Map<string, { id: string; name: string; kbUrl?: string; players?: string[] }>();
+  // Store project info including txtFiles
+  const projectsMap = new Map<string, { id: string; name: string; txtFiles: { name: string; url: string }[]; players?: string[] }>();
 
   // Helper function to fetch project index.json
   async function fetchProjectIndex(projectId: string): Promise<ProjectIndex | null> {
@@ -126,6 +126,7 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
         projectsMap.set(project, {
           id: project,
           name: projectIndex.name,
+          txtFiles: [],
           players: projectIndex.player,
         });
         validatedProjects.add(project);
@@ -135,15 +136,16 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
       }
     }
 
-    // Check if it is KB.txt
-    if (parts[expIndex + 2] === 'KB.txt') {
+    // Check if it is a .txt file directly under the project root (not in subdirectories)
+    const txtFileName = parts[parts.length - 1];
+    if (txtFileName.endsWith('.txt') && parts.length === expIndex + 3) {
       const relativePath = parts.slice(expIndex + 1).map(encodeURIComponent).join('/');
       const url = `${baseUrl}campaigns/${relativePath}`;
       
-      // Only set kbUrl if project is in projects list
+      // Only add txtFile if project is in projects list
       const p = projectsMap.get(project);
       if (p) {
-        p.kbUrl = url;
+        p.txtFiles.push({ name: txtFileName, url });
       }
       continue;
     }

@@ -5,41 +5,41 @@ import { Copy, Check, FileText } from 'lucide-react';
 import type { Project } from '../types';
 import styles from './KBPage.module.css';
 
-interface KBPageProps {
+interface TextFilePageProps {
   projects: Project[];
 }
 
-const KBPage: React.FC<KBPageProps> = ({ projects }) => {
-  const { projectId } = useParams<{ projectId: string }>();
+const TextFilePage: React.FC<TextFilePageProps> = ({ projects }) => {
+  const { projectId, fileName } = useParams<{ projectId: string; fileName: string }>();
   const [content, setContent] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
   const project = projects.find(p => p.id === projectId);
+  const txtFile = project?.txtFiles.find(f => f.name === fileName);
 
   useEffect(() => {
-    if (project?.kbUrl) {
+    if (txtFile) {
       setLoading(true);
       setError(null);
-      fetch(project.kbUrl)
+      fetch(txtFile.url)
         .then(async res => {
           if (!res.ok) {
              await res.text();
-             // If 404, maybe file doesn't exist
-             if (res.status === 404) throw new Error('KB.txt not found for this project.');
-             throw new Error(`Failed to load KB.txt: ${res.status} ${res.statusText}`);
+             if (res.status === 404) throw new Error(`${fileName} not found for this project.`);
+             throw new Error(`Failed to load ${fileName}: ${res.status} ${res.statusText}`);
           }
           return res.text();
         })
         .then(text => setContent(text))
         .catch(err => setError(err.message))
         .finally(() => setLoading(false));
-    } else if (project && !project.kbUrl) {
-      setError('No KB.txt linked for this project.');
+    } else if (project && !txtFile) {
+      setError(`${fileName || 'File'} not found for this project.`);
       setContent('');
     }
-  }, [project]);
+  }, [project, txtFile, fileName]);
 
   const handleCopy = () => {
     if (!content) return;
@@ -50,12 +50,14 @@ const KBPage: React.FC<KBPageProps> = ({ projects }) => {
 
   if (!project) return <div>Project not found</div>;
 
+  const displayName = fileName?.replace(/\.txt$/, '') || 'Text File';
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <FileText size={28} />
-          <h1 className={styles.title}>Knowledge Base Source</h1>
+          <h1 className={styles.title}>{displayName}</h1>
         </div>
         
         <button 
@@ -68,7 +70,7 @@ const KBPage: React.FC<KBPageProps> = ({ projects }) => {
         </button>
       </header>
 
-      {loading && <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading KB.txt...</div>}
+      {loading && <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading {fileName}...</div>}
       
       {error && (
         <div className={styles.error}>
@@ -85,4 +87,4 @@ const KBPage: React.FC<KBPageProps> = ({ projects }) => {
   );
 };
 
-export default KBPage;
+export default TextFilePage;

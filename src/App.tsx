@@ -6,7 +6,7 @@ import DocumentPage from './pages/DocumentPage';
 import DiffPage from './pages/DiffPage';
 import Home from './pages/Home';
 import ProjectDashboard from './pages/ProjectDashboard';
-import KBPage from './pages/KBPage';
+import TextFilePage from './pages/TextFilePage';
 import LogPage from './pages/LogPage';
 import SearchPage from './pages/SearchPage';
 import { loadContent } from './utils/contentLoader';
@@ -32,7 +32,7 @@ function App() {
            <Route index element={<ProjectDashboard projects={data.projects} documents={data.documents} />} />
            
 
-            <Route path="KB" element={<KBPage projects={data.projects} />} />
+            <Route path="txt/:fileName" element={<TextFilePage projects={data.projects} />} />
             <Route path="log" element={<LogPage />} />
             <Route path="search" element={<SearchPage documents={data.documents} />} />
             <Route path="diff/*" element={<DiffPage documents={data.documents} />} />

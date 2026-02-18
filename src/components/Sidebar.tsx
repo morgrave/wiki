@@ -171,16 +171,19 @@ const Sidebar: React.FC<SidebarProps> = ({ projects, documents, isOpen = true, o
           <div className={styles.section} style={{ paddingTop: 0 }}>
             <label className={styles.sectionTitle}>PROMPT</label>
             <div>
+              {projects.find(p => p.id === projectId)?.txtFiles.map(file => (
                <NavLink
-                 to={`/${projectId}/KB`}
+                 key={file.name}
+                 to={`/${projectId}/txt/${encodeURIComponent(file.name)}`}
                  className={({ isActive }) => clsx(
                    styles.fileLink,
                    isActive && styles.fileActive
                  )}
                >
                  <FileText size={14} />
-                 <span>KB.txt</span>
+                 <span>{file.name}</span>
                </NavLink>
+              ))}
             </div>
           </div>
 

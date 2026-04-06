@@ -209,7 +209,7 @@ async function main() {
   console.log(`🏷️ 라벨: ${label}`);
 
   // 구글 AI 스튜디오 접속
-  const browser = await chromium.launchPersistentContext("./user_data/1", {
+  const browser = await chromium.launchPersistentContext("./user_data/2", {
     headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
     viewport: { width: 2560, height: 1080 },
@@ -218,9 +218,9 @@ async function main() {
   const pages = browser.pages();
   const page = pages.length > 0 ? pages[0] : await browser.newPage();
   // 앰버글로우
-  await page.goto(
-    "https://aistudio.google.com/u/1/prompts/12bSRiOqaSKX4tsfeTPkc64tWsRA1HQ-N",
-  );
+  // await page.goto(
+  //   "https://aistudio.google.com/u/1/prompts/12bSRiOqaSKX4tsfeTPkc64tWsRA1HQ-N",
+  // );
   // 패스파인더
   //  await page.goto(
   //    "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
@@ -242,9 +242,9 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1A8cN9pED4TdlWozYfjfQFBi4_YMwRCwb"
   // );
   // 페리아 2
-  // await page.goto(
-  //   "https://aistudio.google.com/u/1/prompts/1-T1Rv1SMl0TjQBG7t7L_3aWEnb1RS170"
-  // );
+  await page.goto(
+    "https://aistudio.google.com/u/1/prompts/1-T1Rv1SMl0TjQBG7t7L_3aWEnb1RS170"
+  );
   // 페리아 3 (arm1)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"
@@ -281,13 +281,13 @@ async function main() {
   }
 
   // 이전 대화 내역 전부 삭제
-  // await eraseChatLog(page);
+  await eraseChatLog(page);
 
   // KB.txt 내용 입력
-  // await writeKBFile(page, folderPath);
+  await writeKBFile(page, folderPath);
 
   // 사용자가 선택한 로그 내용 입력
-  // await writeLogFile(page, label, logContent);
+  await writeLogFile(page, label, logContent);
 
   // 업데이트된 지식 베이스 파일 목록 추출 및 반영
   await processMDList(page, folderPath, label);

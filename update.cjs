@@ -209,7 +209,7 @@ async function main() {
   console.log(`🏷️ 라벨: ${label}`);
 
   // 구글 AI 스튜디오 접속
-  const browser = await chromium.launchPersistentContext("./user_data/1", {
+  const browser = await chromium.launchPersistentContext("./user_data/3", {
     headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
     viewport: { width: 2560, height: 1080 },
@@ -222,13 +222,13 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/12bSRiOqaSKX4tsfeTPkc64tWsRA1HQ-N",
   // );
   // 앰버글로우 3 (arm1)
-  // await page.goto(
-  //   "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"
-  // );
+  await page.goto(
+    "https://aistudio.google.com/u/1/prompts/1oO9Ea8bCDbjlKX41H6iyoiPmNlYen7YY"
+  );
   // 패스파인더
-   await page.goto(
-     "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
-   );
+  //  await page.goto(
+  //    "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
+  //  );
   // 패스파인더 2
   //  await page.goto(
   //    "https://aistudio.google.com/u/1/prompts/1qC_Q8-n73nRXWrn9HYUzjRmAJWQdlXqT",

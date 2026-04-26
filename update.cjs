@@ -287,6 +287,8 @@ async function main() {
   // 이전 대화 내역 전부 삭제
   await eraseChatLog(page);
 
+  await waitForEnter();
+
   // KB.txt 내용 입력
   await writeKBFile(page, folderPath);
 

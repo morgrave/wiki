@@ -6,6 +6,7 @@ interface ProjectIndex {
   name: string;
   dependency?: string[];
   player?: string[];
+  hidden?: boolean;
 }
 
 // Use Vite's glob import to find files. 
@@ -121,8 +122,8 @@ export async function loadContent(): Promise<{ projects: Project[], documents: D
     // Check if we need to validate this project for display (only once per project)
     if (!validatedProjects.has(project) && !invalidProjects.has(project)) {
       const projectIndex = await fetchProjectIndex(project);
-      if (projectIndex && projectIndex.name) {
-        // Project has valid index.json - add to projects list
+      if (projectIndex && projectIndex.name && !projectIndex.hidden) {
+        // Project has valid index.json and is not hidden - add to projects list
         projectsMap.set(project, {
           id: project,
           name: projectIndex.name,

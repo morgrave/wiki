@@ -84,7 +84,7 @@ async function waitForEnter() {
 }
 
 async function runAndWait(page) {
-  await page.locator("button", { hasText: "Run" }).click();
+  await page.getByRole('button', { name: 'Run Ctrl' }).click();
   const start = Date.now();
 
   // spin 이 사라질 때까지 대기
@@ -209,7 +209,7 @@ async function main() {
   console.log(`🏷️ 라벨: ${label}`);
 
   // 구글 AI 스튜디오 접속
-  const browser = await chromium.launchPersistentContext("./user_data/2", {
+  const browser = await chromium.launchPersistentContext("./user_data/1", {
     headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
     viewport: { width: 2560, height: 1080 },
@@ -226,9 +226,9 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1oO9Ea8bCDbjlKX41H6iyoiPmNlYen7YY"
   // );
   // 패스파인더
-  //  await page.goto(
-  //    "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
-  //  );
+   await page.goto(
+     "https://aistudio.google.com/u/1/prompts/1XvpEt1Ygr9EKB8SA9aNuQfRH7VuGJgO-",
+   );
   // 패스파인더 2
   //  await page.goto(
   //    "https://aistudio.google.com/u/1/prompts/1qC_Q8-n73nRXWrn9HYUzjRmAJWQdlXqT",
@@ -246,9 +246,9 @@ async function main() {
   //   "https://aistudio.google.com/u/1/prompts/1A8cN9pED4TdlWozYfjfQFBi4_YMwRCwb"
   // );
   // 페리아 2
-  await page.goto(
-    "https://aistudio.google.com/u/1/prompts/1-T1Rv1SMl0TjQBG7t7L_3aWEnb1RS170"
-  );
+  // await page.goto(
+  //   "https://aistudio.google.com/u/1/prompts/1U6QT1JwH5WPCZsQW8SN8nF_6UbvaV8eO"
+  // );
   // 페리아 3 (arm1)
   // await page.goto(
   //   "https://aistudio.google.com/u/1/prompts/1Bq-4hbsYWimlOrCbfqZ1lGJ-oDEBr9cs"
@@ -281,19 +281,19 @@ async function main() {
   await page.waitForSelector("textarea", { timeout: 60000 });
 
   if (label === "") {
-    await waitForEnter();
+    // await waitForEnter();
   }
 
   // 이전 대화 내역 전부 삭제
-  await eraseChatLog(page);
+  // await eraseChatLog(page);
 
-  await waitForEnter();
+  // await waitForEnter();
 
   // KB.txt 내용 입력
-  await writeKBFile(page, folderPath);
+  // await writeKBFile(page, folderPath);
 
   // 사용자가 선택한 로그 내용 입력
-  await writeLogFile(page, label, logContent);
+  // await writeLogFile(page, label, logContent);
 
   // 업데이트된 지식 베이스 파일 목록 추출 및 반영
   await processMDList(page, folderPath, label);

@@ -92,7 +92,8 @@ function discoverProjectFiles(projectId: string, baseUrl: string): ProjectFile[]
   return files;
 }
 
-const generateRegex = (name: string) => String.raw`(${name}\s+- .*\r?\n".*")|(${name}:".*"(\r?\n".*")*)`;
+const generateRegex = (name: string) => 
+  String.raw`${name}\s*(?:(?:- .*\r?\n)|:\s*|\r?\n)\s*".*"(\s*\r?\n\s*".*")*`;
 
 const LogPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
